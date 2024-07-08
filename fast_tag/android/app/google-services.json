@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "851197053748",
+    "project_id": "shaurya-pay",
+    "storage_bucket": "shaurya-pay.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:851197053748:android:353c6db18c2387e76e3361",
+        "android_client_info": {
+          "package_name": "com.quick.shauryapay"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD3j8NYdrvHJnZC8Z5t7eq0vcctJuLdbYA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

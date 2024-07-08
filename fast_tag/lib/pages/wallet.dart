@@ -410,11 +410,14 @@ class _WalletPageState extends State<WalletPage> {
                         ),
                       ),
                       SizedBox(width: 5),
-                      Icon(
-                        Icons.account_balance_wallet,
-                        size: 16,
-                        color: Color(0xFF424752),
+                  Padding(
+                      padding: const EdgeInsets.all(5.0),
+                      child: Image.asset(
+                                'images/wallet.png',
+                                width: 20,
+                                height: 20,
                       ),
+                  ),
                     ],
                   )
                 ],

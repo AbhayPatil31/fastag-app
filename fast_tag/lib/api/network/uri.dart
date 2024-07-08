@@ -1,3 +1,5 @@
+import '../../utility/apputility.dart';
+
 class URLS {
   static String baseUrl = "https://staginglink.org/shourya-fastag/";
   String agent_login_apiUrl = baseUrl + "agent_login_api";
@@ -12,8 +14,8 @@ class URLS {
   String wallet_total_amount_api_url = baseUrl + "wallet_total_amount_api";
   String wallet_transaction_history_api_url =
       baseUrl + "wallet_transaction_history_api";
-  String fastag_category_request_api_url =
-      baseUrl + "fastag_category_request_api";
+  String fastag_category_request_api_url =Uri.parse(
+      baseUrl + "fastag_category_request_api").replace(queryParameters: {'agent_id': AppUtility.AgentId}).toString();
   String fastag_category_details_api_url =
       baseUrl + "fastag_category_details_api";
   String get_fastag_request_list_url = baseUrl + "get_fastag_request_list";
@@ -49,7 +51,7 @@ class URLS {
   String set_withdra_request_url = baseUrl + "set_withdra_request";
   String get_withdra_request_url = baseUrl + "get_withdra_request";
   String get_total_withdra_amount_url = baseUrl + "get_total_withdra_amount";
-  String get_mapper_class_api_url = baseUrl + "get_mapper_class_api";
+  String get_mapper_class_api_url = baseUrl + "get_mapper_class_api";//have to implement creatjson,networkcall,other is done
   String get_vehicle_class_api_url = baseUrl + "get_vehicle_class_api";
   final int agent_login_api = 1;
   final int profile_details_api = 2;

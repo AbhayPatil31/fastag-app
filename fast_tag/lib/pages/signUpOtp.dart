@@ -185,7 +185,7 @@ class _SignUpOtpPageState extends State<SignUpOtpPage> {
                   child: RichText(
                       text: TextSpan(
                           text:
-                              'Please enter the 6 digit security code we just sent you at ',
+                              'Please enter the 4 digit security code we just sent you at ',
                           style: TextStyle(
                               color: Color(0xff3B4453),
                               fontWeight: FontWeight.w400,
@@ -202,8 +202,8 @@ class _SignUpOtpPageState extends State<SignUpOtpPage> {
                 ),
                 SizedBox(height: 40),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: List.generate(6, (index) => _buildTextField(index)),
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: List.generate(4, (index) => _buildTextField(index)),
                 ),
                 SizedBox(
                   height: 20,

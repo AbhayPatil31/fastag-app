@@ -13,6 +13,7 @@ import 'package:fast_tag/api/call/deletefastatgrequestcall.dart';
 import 'package:fast_tag/api/call/editfasttagrequestcall.dart';
 import 'package:fast_tag/api/call/getallbarcodecall.dart';
 import 'package:fast_tag/api/call/getassigntagwisedcall.dart';
+import 'package:fast_tag/api/call/getmapperclasscall.dart';
 import 'package:fast_tag/api/call/rechargenowcall.dart';
 import 'package:fast_tag/api/call/replacevehiclecall.dart';
 import 'package:fast_tag/api/call/replacevehicleotpcall.dart';
@@ -405,6 +406,7 @@ class createjson {
 
   String createjsonforaddcustomerdetails(
       String name,
+      String lastname,
       String dob,
       String idtype,
       String idnumbe,
@@ -594,6 +596,21 @@ class createjson {
       Setwithdrawcall Stocklistcalljson =
           Setwithdrawcall(agentId: agentId, withdraAmount: amount);
       var result = Setwithdrawcall.fromJson(Stocklistcalljson.toJson());
+      String str = encoder.convert(result);
+      return str;
+    } catch (e) {
+      print(e.toString());
+      return "";
+    }
+  }
+   String createjsonforgetmapperclass(
+      String? vehicleClassId, BuildContext context) {
+    try {
+      JsonEncoder encoder = JsonEncoder.withIndent('');
+      Getmapperclasscall loginjsonCreation = Getmapperclasscall(
+        vehicleClassId: vehicleClassId,
+      );
+      var result = Getmapperclasscall.fromJson(loginjsonCreation.toJson());
       String str = encoder.convert(result);
       return str;
     } catch (e) {

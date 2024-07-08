@@ -17,6 +17,7 @@ import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:get/get_connect/http/src/utils/utils.dart';
 
+import '../api/response/getmapperclassresponse.dart';
 import '../api/response/vehiclemakerresponse.dart';
 import 'assign_customer_details.dart';
 
@@ -63,6 +64,7 @@ class SetvehicledetailsState extends State<SetVehicleDetails> {
     setvalue();
     Networkcallforvehiclemakerlist();
     Networkcallforgetvehicleclass();
+    // Networkcallforgetmapperclass();
     if (_isChecked == true) {
       textEditingControllertype.text = "LPV";
       setState(() {});
@@ -85,8 +87,8 @@ class SetvehicledetailsState extends State<SetVehicleDetails> {
     vehicletype.add("Maxi Cab");
     vehicletype.add(
         "Goods Carrier(only for Tata Ace Pickup/Mini Light commercial vehicle for VC 20)");
-    npciVehicleClassID.add("4");
-    npciVehicleClassID.add("20");
+    // npciVehicleClassID.add("4");
+    // npciVehicleClassID.add("20");
     //tagVehicleClassID.add("4");
     setState(() {});
   }
@@ -170,7 +172,7 @@ class SetvehicledetailsState extends State<SetVehicleDetails> {
       print(e.toString());
     }
   }
-
+//below i have to work today,have to add get_mapper_class_api response id to below list
   List<String> tagVehicleClassID = [];
   Future<void> Networkcallforgetvehicleclass() async {
     try {
@@ -185,6 +187,42 @@ class SetvehicledetailsState extends State<SetVehicleDetails> {
           case "true":
             for (int i = 0; i < response[0].data!.length; i++) {
               tagVehicleClassID.add(response[0].data![i].id!);
+            }
+
+            setState(() {});
+            break;
+          case "false":
+            SnackBarDesign(
+                response[0].message!,
+                context,
+                colorfile().errormessagebcColor,
+                colorfile().errormessagetxColor);
+            break;
+        }
+      } else {
+        SomethingWentWrongSnackBarDesign(context);
+      }
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  Future<void> Networkcallforgetmapperclass(String vehicleId) async {
+    try {
+       String vehiclclassid = createjson().createjsonforgetmapperclass(
+          vehicleId, context);
+      List<Object?>? list = await NetworkCall().postMethod(
+          URLS().get_mapper_class_api,
+          URLS().get_mapper_class_api_url,
+          vehiclclassid,
+          context,);
+      if (list != null) {
+        List<Getmapperclassresponse> response = List.from(list!);
+        String status = response[0].status!;
+        switch (status) {
+          case "true":
+            for (int i = 0; i < response[0].data!.length; i++) {
+              npciVehicleClassID.add(response[0].data![i].id!);
             }
 
             setState(() {});
@@ -1159,6 +1197,7 @@ class SetvehicledetailsState extends State<SetVehicleDetails> {
                     onChanged: (value) {
                       setState(() {
                         tagVehicleClassIDselectedValue = value;
+                        Networkcallforgetmapperclass(tagVehicleClassIDselectedValue!);
                       });
                     },
                     buttonStyleData: ButtonStyleData(
@@ -1333,7 +1372,7 @@ class SetvehicledetailsState extends State<SetVehicleDetails> {
           .createjsonforsetvehicledetailsmanually(
               vehiclemakerselectedValue!,
               vehiclemodelselectedValue!,
-              typeselectedValue!,
+              typeselectedValue ?? '',
               vehicletypeselectedValue!,
               npciVehicleClassIDselectedValue!,
               tagVehicleClassIDselectedValue!,

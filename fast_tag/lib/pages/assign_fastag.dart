@@ -127,31 +127,30 @@ class AssignFastagPageState extends State<AssignFastagPage> {
                   ],
                 ),
                 child: TextField(
-                  controller: mobilecontroller,
-                  inputFormatters: [
-                    FilteringTextInputFormatter.allow(RegExp("[0-9]"))
-                  ],
-                  keyboardType: TextInputType.number,
-                  decoration: InputDecoration(
-                    hintText: 'Enter Mobile Number*',
-                    errorText: validatemobilenumber ? null : errorformobile,
-                    errorStyle: TextStyle(color: Colors.red, fontSize: 10),
-                    border: OutlineInputBorder(), // Remove underline
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                          color: Colors.blue), // Change border color on focus
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                          color: const Color.fromARGB(
-                              255, 252, 250, 250)!), // Change border color
-                    ),
-                    fillColor: Theme.of(context).scaffoldBackgroundColor,
-                    filled: true,
-                    contentPadding:
-                        EdgeInsets.symmetric(vertical: 15, horizontal: 20),
-                  ),
-                ),
+  controller: mobilecontroller,
+  inputFormatters: [
+    FilteringTextInputFormatter.digitsOnly, // Allows only digits
+    LengthLimitingTextInputFormatter(10), // Limits to 10 characters
+  ],
+  keyboardType: TextInputType.number,
+  maxLength: 10, // Ensures only 10 characters can be entered
+  decoration: InputDecoration(
+    hintText: 'Enter Mobile Number*',
+    errorText: validatemobilenumber ? null : errorformobile,
+    errorStyle: TextStyle(color: Colors.red, fontSize: 10),
+    border: OutlineInputBorder(),
+    focusedBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: Colors.blue),
+    ),
+    enabledBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: const Color.fromARGB(255, 252, 250, 250)!),
+    ),
+    fillColor: Theme.of(context).scaffoldBackgroundColor,
+    filled: true,
+    contentPadding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+  ),
+),
+
               ),
               SizedBox(height: 30), // Adding space before the button
               SizedBox(

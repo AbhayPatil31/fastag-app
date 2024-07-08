@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:fast_tag/api/call/cancelpendingissuancecall.dart';
 import 'package:fast_tag/api/call/getmapperclasscall.dart';
 import 'package:fast_tag/api/call/walletamountcall.dart';
@@ -177,8 +179,8 @@ class NetworkCall {
           case 39:
             final total = totalwithdrawamountresponseFromJson(str);
             return total;
-          case 40:
-            final mapperclass = getmapperclassresponseFromJson(str);
+          case 40://this is 8-7-24 work,have to add id to otherlist.
+            final mapperclass = getmapperclassresponseFromJson(str);//this is 8-7-24 work,have to add id to otherlist.
             return mapperclass;
         }
       } else if (response.statusCode == 400) {
@@ -200,13 +202,15 @@ class NetworkCall {
 
   Future<List<Object?>?> getMethod(
       int requestCode, String url, BuildContext context) async {
-    var response = await http.get(Uri.parse(url));
+    var response = await http.get(Uri.parse(url),);
+    log("url : $url");
+    
     try {
       if (response.statusCode == 200) {
         String ResponseString = response.body;
 
         String str = "[" + ResponseString + "]";
-
+        log("Response : $str");
         switch (requestCode) {
           case 3:
             final helplist = helpresponseFromJson(str);

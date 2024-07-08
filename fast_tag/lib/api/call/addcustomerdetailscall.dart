@@ -12,6 +12,7 @@ String addcustomerdetailscallToJson(Addcustomerdetailscall data) =>
 
 class Addcustomerdetailscall {
   String? name;
+  String? lastname;
   String? dob;
   String? docType;
   String? docNo;
@@ -24,6 +25,7 @@ class Addcustomerdetailscall {
 
   Addcustomerdetailscall({
     this.name,
+    this.lastname,
     this.dob,
     this.docType,
     this.docNo,
@@ -37,6 +39,7 @@ class Addcustomerdetailscall {
   factory Addcustomerdetailscall.fromJson(Map<String, dynamic> json) =>
       Addcustomerdetailscall(
         name: json["name"],
+        lastname: json["lastName "],
         dob: json["dob"],
         docType: json["docType"],
         docNo: json["docNo"],
@@ -49,6 +52,7 @@ class Addcustomerdetailscall {
 
   Map<String, dynamic> toJson() => {
         "name": name,
+        "lastName ":lastname,
         "dob": dob,
         "docType": docType,
         "docNo": docNo,

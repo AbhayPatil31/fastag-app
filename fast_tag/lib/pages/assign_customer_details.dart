@@ -4,12 +4,14 @@ import 'dart:io';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:fast_tag/api/response/addcustomerdetailsresponse.dart';
 import 'package:fast_tag/api/response/agentplanresponse.dart';
+import 'package:fast_tag/pages/UpperCaseTextInputFormatter%20.dart';
 import 'package:fast_tag/pages/assign_vehicle_details.dart';
 import 'package:fast_tag/utility/apputility.dart';
 import 'package:fast_tag/utility/progressdialog.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:image_picker/image_picker.dart';
@@ -21,6 +23,8 @@ import '../utility/colorfile.dart';
 import '../utility/snackbardesign.dart';
 
 final _namecontroller = TextEditingController();
+final _lastnamecontroller = TextEditingController();
+
 final _dobcontroller = TextEditingController();
 final _idnumbercontroller = TextEditingController();
 final _idcontroller = TextEditingController();
@@ -95,6 +99,7 @@ class CustomerDetailsPageState extends State<CustomerDetailsPage> {
     // TODO: implement dispose
     super.dispose();
     _namecontroller.clear();
+    _lastnamecontroller.clear();
     _dobcontroller.clear();
     _idcontroller.clear();
     _idnumbercontroller.clear();
@@ -163,7 +168,8 @@ class CustomerDetailsPageState extends State<CustomerDetailsPage> {
                       ),
                     ),
                     SizedBox(height: 15),
-                    namewidget(),
+                    firstnamewidget(),
+                    lastnamewidget(),
                     dobwidget(),
                     idprofselectwidget(),
                     idselectedValue == "2" || idselectedValue == "4"
@@ -218,7 +224,7 @@ class CustomerDetailsPageState extends State<CustomerDetailsPage> {
     );
   }
 
-  Widget namewidget() {
+  Widget firstnamewidget() {
     return Container(
       margin: EdgeInsets.only(bottom: 20),
       decoration: BoxDecoration(
@@ -238,7 +244,45 @@ class CustomerDetailsPageState extends State<CustomerDetailsPage> {
           setState(() {});
         },
         decoration: InputDecoration(
-          hintText: 'Enter Customer Name*',
+          hintText: 'Enter First Name*',
+          border: OutlineInputBorder(),
+          focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.blue),
+          ),
+          errorText: validatecustomername ? null : errorforname,
+          errorStyle: TextStyle(color: Colors.red, fontSize: 10),
+          enabledBorder: OutlineInputBorder(
+            borderSide:
+                BorderSide(color: const Color.fromARGB(255, 252, 250, 250)!),
+          ),
+          fillColor: Theme.of(context).scaffoldBackgroundColor,
+          filled: true,
+          contentPadding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+        ),
+      ),
+    );
+  }
+  Widget lastnamewidget() {
+    return Container(
+      margin: EdgeInsets.only(bottom: 20),
+      decoration: BoxDecoration(
+        boxShadow: [
+          BoxShadow(
+            color: Color.fromARGB(255, 219, 213, 213).withOpacity(0.5),
+            spreadRadius: 3,
+            blurRadius: 5,
+            offset: Offset(0, 3),
+          ),
+        ],
+      ),
+      child: TextField(
+        controller: _lastnamecontroller,
+        onChanged: (value) {
+          validatecustomername = true;
+          setState(() {});
+        },
+        decoration: InputDecoration(
+          hintText: 'Enter Last Name*',
           border: OutlineInputBorder(),
           focusedBorder: OutlineInputBorder(
             borderSide: BorderSide(color: Colors.blue),
@@ -517,29 +561,32 @@ class CustomerDetailsPageState extends State<CustomerDetailsPage> {
         ],
       ),
       child: TextField(
-        controller: _idnumbercontroller,
-        onChanged: (value) {
-          validateidnumber = true;
-          setState(() {});
-        },
-        decoration: InputDecoration(
-          hintText: 'ID Proof Number*',
-          errorText: validateidnumber ? null : errorforidnumber,
-          errorStyle: TextStyle(color: Colors.red, fontSize: 10),
-          border: OutlineInputBorder(),
-          focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.blue),
-          ),
-          enabledBorder: OutlineInputBorder(
-            borderSide:
-                BorderSide(color: const Color.fromARGB(255, 252, 250, 250)!),
-          ),
-          fillColor: Theme.of(context).scaffoldBackgroundColor,
-          filled: true,
-          contentPadding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
-        ),
-      ),
-    );
+  controller: _idnumbercontroller,
+  textCapitalization: TextCapitalization.characters, // Forces capitalization
+  inputFormatters: [
+    FilteringTextInputFormatter.allow(RegExp(r'[A-Z0-9]')), // Allow only uppercase letters and digits
+  ],
+  onChanged: (value) {
+    validateidnumber = true;
+    setState(() {});
+  },
+  decoration: InputDecoration(
+    hintText: 'ID Proof Number*',
+    errorText: validateidnumber ? null : errorforidnumber,
+    errorStyle: TextStyle(color: Colors.red, fontSize: 10),
+    border: OutlineInputBorder(),
+    focusedBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: Colors.blue),
+    ),
+    enabledBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: const Color.fromARGB(255, 252, 250, 250)!),
+    ),
+    fillColor: Theme.of(context).scaffoldBackgroundColor,
+    filled: true,
+    contentPadding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+  ),
+),
+ );
   }
 
   Widget planselectwidget() {
@@ -683,6 +730,7 @@ class CustomerDetailsPageState extends State<CustomerDetailsPage> {
       errorforexpirydate = "Please select expiry date ";
   validatefields() {
     if (_namecontroller.text.isEmpty &&
+    _lastnamecontroller.text.isEmpty &&
         _dobcontroller.text.isEmpty &&
         idselectedValue == null &&
         _idnumbercontroller.text.isEmpty &&
@@ -732,6 +780,7 @@ class CustomerDetailsPageState extends State<CustomerDetailsPage> {
       ProgressDialog.showProgressDialog(context, "title");
       String assignfaasttag = createjson().createjsonforaddcustomerdetails(
           _namecontroller.text,
+          _lastnamecontroller.text,
           _dobcontroller.text,
           idselectedValue!,
           _idnumbercontroller.text,

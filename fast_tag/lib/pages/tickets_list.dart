@@ -9,6 +9,7 @@ import 'package:fast_tag/api/network/create_json.dart';
 import 'package:fast_tag/api/network/network.dart';
 import 'package:fast_tag/api/network/uri.dart';
 import 'package:fast_tag/api/response/Ticketlistresponse.dart';
+import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -203,6 +204,8 @@ class _TicketsListPageState extends State<TicketsListPage> {
   }
 
   Widget transactionCard(TicketListData ticketData) {
+    String formattedDate = DateFormat('dd/MM/yyyy').format(DateTime.parse(ticketData.ticketCreateDate!));
+
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -250,13 +253,14 @@ class _TicketsListPageState extends State<TicketsListPage> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'Date: ${ticketData.ticketCreateDate}',
+                      'Date: ${formattedDate}',
                       style: TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.w400,
                         color: Color(0xFF424752),
                       ),
                     ),
+                   
                     Row(
                       children: [
                         Icon(

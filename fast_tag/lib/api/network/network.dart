@@ -58,7 +58,7 @@ class NetworkCall {
         String ResponseString = response.body;
 
         String str = "[" + ResponseString + "]";
-        print(str);
+        log(str);
 
         switch (requestCode) {
           case 1:

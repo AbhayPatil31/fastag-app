@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:fast_tag/api/call/Logincalljson.dart';
 import 'package:fast_tag/api/call/Profilejson.dart';
@@ -39,6 +40,7 @@ import '../call/Ticketraisejson.dart';
 import '../call/categorydetailscall.dart';
 import '../call/categorydetailscall.dart' as categorycall;
 import '../call/validateotpcall.dart';
+import 'package:path/path.dart' as path;
 
 class createjson {
   String createJsonForLogin(String? mobile_number, String pushtoken) {
@@ -139,22 +141,26 @@ class createjson {
   }
 
 // Raise Tickits For Add Tickits
-  String ticketraiseresponseFromJson(
-      String? agent_id, String? description, String? help_type_id) {
-    try {
-      JsonEncoder encoder = JsonEncoder.withIndent('');
-      Ticketraisejson loginjsonCreation = Ticketraisejson(
-          agent_id: agent_id,
-          description: description,
-          help_type_id: help_type_id);
-      var result = Ticketraisejson.fromJson(loginjsonCreation.toJson());
-      String str = encoder.convert(result);
-      return str;
-    } catch (e) {
-      print(e.toString());
-      return "";
-    }
+ String ticketraiseresponseFromJson(
+    String? agent_id, String? description, String? help_type_id, File? attachement) {
+  try {
+    JsonEncoder encoder = JsonEncoder.withIndent('');
+    Ticketraisejson loginjsonCreation = Ticketraisejson(
+      agent_id: agent_id,
+      description: description,
+      help_type_id: help_type_id,
+      attachement: attachement != null ? path.basename(attachement.path) : null, // Add the image path if it exists
+    );
+    var result = Ticketraisejson.fromJson(loginjsonCreation.toJson());
+    String str = encoder.convert(result);
+    return str;
+  } catch (e) {
+    print(e.toString());
+    return "";
   }
+}
+
+
 
   String createjsonfortotalwalletamount(
       String? agent_id, BuildContext context) {

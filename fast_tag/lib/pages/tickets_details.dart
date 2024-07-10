@@ -249,7 +249,14 @@ class _TicketDetailsPageState extends State<TicketDetailsPage> {
             ),
           ),
           SizedBox(height: 10),
-
+          //below change the image after coming it from api
+          Container( 
+            height: 182,
+            width: 356,
+          decoration: BoxDecoration( 
+            color: Colors.blue.shade100,
+          ),
+          ),
           // Dynamic cards from data1List
           ListView.builder(
             shrinkWrap: true,

@@ -1,4 +1,6 @@
+import 'dart:convert';
 import 'dart:developer';
+import 'dart:io';
 import 'package:fast_tag/api/network/create_json.dart';
 import 'package:fast_tag/api/network/network.dart';
 import 'package:fast_tag/api/network/uri.dart';
@@ -6,7 +8,9 @@ import 'package:fast_tag/api/network/uri.dart';
 import 'package:fast_tag/pages/tickets_list.dart';
 import 'package:fast_tag/utility/colorfile.dart';
 import 'package:fast_tag/utility/snackbardesign.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../api/response/Helpresponse.dart';
@@ -19,6 +23,11 @@ class RaiseTicketsPage extends StatefulWidget {
 class _RaiseTicketsPageState extends State<RaiseTicketsPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _descriptionController = TextEditingController();
+  TextEditingController _controller = TextEditingController();
+  
+  File? attachement;
+  
+  String? attachmentPath;
 
   @override
   void initState() {
@@ -66,12 +75,46 @@ class _RaiseTicketsPageState extends State<RaiseTicketsPage> {
       log(e.toString());
     }
   }
+Future<void> uploadFile(File file, String filename, String filetype) async {
+  log("File base name: $filename");
+  try {
+    switch (filetype) {
+      case "_submitfile":
+        attachement = file;
+        attachmentPath = filename;
+        break;
+    }
+  } catch (e) {
+    log("Error uploading file: $e");
+  }
+}
+
+    Future<void> _pickFile() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      allowMultiple: false, // Allow picking only one file at a time
+      type: FileType.image, // Allow picking any kind of file
+    );
+
+    if (result != null) {
+      String fileName = result.files.first.name;
+      String filePath = result.files.first.path!;
+
+      setState(() {
+        uploadFile(File(filePath), fileName, "_submitfile");
+        attachmentPath = fileName;
+        _controller.text =
+            fileName; // Set the selected filename to the TextField
+      });
+    } else {
+      // User canceled the file picking process
+    }
+  }
 
   Future<void> addTickit(
       String agent_id, String description, String help_type_id) async {
     try {
       String raiseString = createjson()
-          .ticketraiseresponseFromJson(agent_id, description, help_type_id);
+          .ticketraiseresponseFromJson(agent_id, description, help_type_id,attachement!);
       NetworkCall networkCall = NetworkCall();
 
       var ticketraiseresponse = await networkCall.postMethod(
@@ -242,6 +285,49 @@ class _RaiseTicketsPageState extends State<RaiseTicketsPage> {
                   ],
                 ),
               ),
+           GestureDetector(
+                            onTap: () => _pickFile(),
+                            child: Padding(
+                              padding: const EdgeInsets.only(left: 30.0),
+                              child: Container(
+                                height: 48,
+                                width:350,
+                                decoration: BoxDecoration(
+                                  // border: Border.all(
+                                  //   color: Color.fromARGB(255, 136, 135, 135),
+                                  //   width: 1.2,
+                                  // ),
+                                  // boxShadow: [BoxShadow(offset: Offset(0,4),),],
+                                  borderRadius: BorderRadius.circular(7.0),
+                                ),
+                                child: TextField(
+                                  controller:
+                                      _controller, // Connect the controller to the TextField
+                                  enabled: false,
+                                  decoration: InputDecoration(
+                                    contentPadding: EdgeInsets.all(8),
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(5),
+                                      
+                                    ),
+                                    suffixIcon: Padding(
+                                      padding: const EdgeInsets.only(
+                                          top: 10, left: 5, right: 0, bottom: 10),
+                                      // child: Icon(
+                                      //   Icons.file_download_outlined,
+                                      //   size: 30,
+                                      //   color: Color(0xFF008357),
+                                      // ),
+                                      child: Image.asset("images/upload-icon.png",height: 19,width: 19,),
+                                    ),
+                                    hintText: 'Attachment',
+                                    fillColor: Colors.white,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                         
               SizedBox(height: 30),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 30.0),
@@ -302,6 +388,7 @@ class _RaiseTicketsPageState extends State<RaiseTicketsPage> {
       ),
     );
   }
+
 }
 
 void main() {

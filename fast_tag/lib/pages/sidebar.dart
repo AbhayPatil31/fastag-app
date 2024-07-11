@@ -9,6 +9,7 @@ import 'package:fast_tag/pages/signUp.dart';
 import 'package:fast_tag/pages/stock.dart';
 import 'package:fast_tag/pages/tickets_help.dart';
 import 'package:fast_tag/pages/wallet.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'request_list.dart';
@@ -211,8 +212,8 @@ class _SideBarState extends State<SideBar> {
                       children: [
                         Text(
                           "Logout",
-                          style: TextStyle(
-                            fontSize: 24,
+                          style: GoogleFonts.inter(
+                            fontSize: 21,
                             fontWeight: FontWeight.bold,
                             color: Color.fromRGBO(0, 86, 208, 1),
                           ),
@@ -226,7 +227,7 @@ class _SideBarState extends State<SideBar> {
                         Text(
                           "Are you sure you want to log out?",
                           style: TextStyle(
-                            fontSize: 18,
+                            fontSize: 16,
                             fontWeight: FontWeight.w500,
                             color: Colors.black,
                           ),
@@ -259,8 +260,8 @@ class _SideBarState extends State<SideBar> {
                                 ),
                                 child: Text(
                                   'Cancel',
-                                  style: TextStyle(
-                                    fontSize: 16,
+                                  style: GoogleFonts.inter(
+                                    fontSize: 14,
                                     color: Colors.black,
                                   ),
                                 ),
@@ -298,7 +299,7 @@ class _SideBarState extends State<SideBar> {
                                 ),
                                 child: Text(
                                   'Yes, logout',
-                                  style: TextStyle(
+                                  style: GoogleFonts.inter(
                                     fontSize: 16,
                                     color: Colors.white,
                                   ),

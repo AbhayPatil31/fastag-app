@@ -1,8 +1,10 @@
+import 'dart:convert';
+import 'dart:developer';
+import 'dart:typed_data';
+
 // To parse this JSON data, do
 //
 //     final ticketdetailsListresponse = ticketdetailsListresponseFromJson(jsonString);
-
-import 'dart:convert';
 
 List<TicketdetailsListresponse> ticketdetailsListresponseFromJson(String str) =>
     List<TicketdetailsListresponse>.from(
@@ -73,9 +75,6 @@ class Reply {
         ticketId: json["ticket_id"],
         replyBy: json["reply_by"],
         replyDate: json["reply_date"],
-        // replyDate: json["reply_date"] == null
-        //     ? null
-        //     : DateTime.parse(json["reply_date"]),
         status: json["status"],
         isDeleted: json["is_deleted"],
         createdOn: json["created_on"] == null
@@ -92,8 +91,6 @@ class Reply {
         "ticket_id": ticketId,
         "reply_by": replyBy,
         "reply_date": replyDate,
-        // "reply_date":
-        //     "${replyDate!.year.toString().padLeft(4, '0')}-${replyDate!.month.toString().padLeft(2, '0')}-${replyDate!.day.toString().padLeft(2, '0')}",
         "status": status,
         "is_deleted": isDeleted,
         "created_on": createdOn?.toIso8601String(),
@@ -108,7 +105,7 @@ class Ticket {
   DateTime? ticketCreateDate;
   String? ticketStatus;
   String? description;
-  String? attachment;
+  String? attachement;
   String? helpTypeId;
   String? status;
   String? isDeleted;
@@ -123,7 +120,7 @@ class Ticket {
     this.ticketCreateDate,
     this.ticketStatus,
     this.description,
-    this.attachment,
+    this.attachement,
     this.helpTypeId,
     this.status,
     this.isDeleted,
@@ -141,7 +138,7 @@ class Ticket {
             : DateTime.parse(json["ticket_create_date"]),
         ticketStatus: json["ticket_status"],
         description: json["description"],
-        attachment: json["attachment"],
+        attachement: json["attachement"],
         helpTypeId: json["help_type_id"],
         status: json["status"],
         isDeleted: json["is_deleted"],
@@ -157,10 +154,10 @@ class Ticket {
         "agent_id": agentId,
         "ticket_number": ticketNumber,
         "ticket_create_date":
-            "${ticketCreateDate!.year.toString().padLeft(4, '0')}-${ticketCreateDate!.month.toString().padLeft(2, '0')}-${ticketCreateDate!.day.toString().padLeft(2, '0')}",
+            ticketCreateDate?.toIso8601String(),
         "ticket_status": ticketStatus,
         "description": description,
-        "attachment": attachment,
+        "attachement": attachement,
         "help_type_id": helpTypeId,
         "status": status,
         "is_deleted": isDeleted,
@@ -168,4 +165,15 @@ class Ticket {
         "updated_on": updatedOn?.toIso8601String(),
         "help_type_name": helpTypeName,
       };
+
+  // Function to get the decoded attachment
+  Uint8List? getDecodedAttachment() {
+    if (attachement == null) return null;
+    try {
+      return base64Decode(attachement!);
+    } catch (e) {
+      log("Error decoding base64 string: $e");
+      return null;
+    }
+  }
 }

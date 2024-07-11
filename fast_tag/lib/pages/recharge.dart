@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 
 import '../api/network/create_json.dart';
@@ -83,8 +84,13 @@ class RechargePageState extends State<RechargePage> {
     return Scaffold(
       extendBodyBehindAppBar: true, // Extend the body behind the app bar
       appBar: AppBar(
-        title: Text('Recharge/ Refill'),
-        backgroundColor: Colors.transparent,
+        title: Text('Recharge/ Refill',
+            style: GoogleFonts.inter(
+              fontWeight: FontWeight.w600,
+              color: Color(0xFF1D2024),
+              fontSize: 18,
+            )),
+        backgroundColor: Colors.white,
         elevation: 0,
       ),
       // Set the background image as the body
@@ -116,7 +122,7 @@ class RechargePageState extends State<RechargePage> {
               // ),
               Text(
                 'Enter Your Amount',
-                style: TextStyle(fontSize: 28, color: Colors.white),
+                style: GoogleFonts.inter(fontSize: 20, color: Colors.white),
               ),
               SizedBox(height: 20),
               SizedBox(
@@ -130,25 +136,26 @@ class RechargePageState extends State<RechargePage> {
                   keyboardType: TextInputType.number,
                   decoration: InputDecoration(
                     hintText: 'RS.', // Add placeholder text
-                    border: OutlineInputBorder(),
+                    hintStyle: TextStyle(color: Colors.white),
+                    border: InputBorder.none,
                     errorText:
                         validateamount ? null : "Please enter recharge amount",
                     errorStyle: TextStyle(color: Colors.red, fontSize: 10),
                     filled: true,
-                    fillColor: const Color.fromRGBO(255, 255, 255, 1),
+                    fillColor: const Color(0xFF0056D1),
                     contentPadding: EdgeInsets.symmetric(
                       vertical: 10,
                       horizontal: 20,
                     ), // Adjust the padding
                   ),
                   textAlign: TextAlign.center,
-                  style: TextStyle(color: Colors.black),
+                  style: TextStyle(color: Colors.white),
                 ),
               ),
               SizedBox(height: 10),
               Text(
                 'Existing Balance is Rs.${wallenttotalamount.isEmpty ? 0 : wallenttotalamount[0].amount}',
-                style: TextStyle(fontSize: 18, color: Colors.white),
+                style: GoogleFonts.inter(fontSize: 16, color: Colors.white),
               ),
               SizedBox(height: 28),
               ElevatedButton(
@@ -170,7 +177,7 @@ class RechargePageState extends State<RechargePage> {
                 ),
                 child: Text(
                   'Submit',
-                  style: TextStyle(
+                  style: GoogleFonts.inter(
                       fontSize: 18, color: Color.fromRGBO(1, 67, 121, 1)),
                 ),
               ),

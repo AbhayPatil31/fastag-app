@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 
 import '../api/network/network.dart';
@@ -81,7 +82,11 @@ class RequestFastagState extends State<RequestFastag> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Request Fastag',
-            style: TextStyle(fontWeight: FontWeight.w500)),
+            style: GoogleFonts.inter(
+              fontWeight: FontWeight.w500,
+              color: Color(0xFF1D2024),
+              fontSize: 18,
+            )),
       ),
       body: Center(
         child: Container(

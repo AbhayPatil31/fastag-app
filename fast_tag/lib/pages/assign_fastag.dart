@@ -10,6 +10,7 @@ import 'package:fast_tag/utility/snackbardesign.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 final vehiclecontroller = TextEditingController();
 final mobilecontroller = TextEditingController();
@@ -41,13 +42,12 @@ class AssignFastagPageState extends State<AssignFastagPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          'Assign FasTag',
-          style: TextStyle(
-            fontSize: 20, // 25px size
-            fontWeight: FontWeight.bold, // Bold text
-          ),
-        ),
+        title: Text('Assign FasTag',
+            style: GoogleFonts.inter(
+              fontWeight: FontWeight.w600,
+              color: Color(0xFF1D2024),
+              fontSize: 18,
+            )),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -61,11 +61,10 @@ class AssignFastagPageState extends State<AssignFastagPage> {
                   height: 400, // Adjust the height as needed
                 ),
               ),
-
               Text(
                 'Enter Details',
                 style: TextStyle(
-                  fontSize: 25, // 25px size
+                  fontSize: 20, // 25px size
                   fontWeight: FontWeight.bold, // Bold text
                 ),
               ),
@@ -74,11 +73,10 @@ class AssignFastagPageState extends State<AssignFastagPage> {
                 decoration: BoxDecoration(
                   boxShadow: [
                     BoxShadow(
-                      color: Color.fromARGB(255, 219, 213, 213)
-                          .withOpacity(0.5), // Shadow color
-                      spreadRadius: 3, // Spread radius
-                      blurRadius: 5, // Blur radius
-                      offset: Offset(0, 3), // Offset in x and y directions
+                      color: Colors.grey.withOpacity(0.5),
+                      spreadRadius: 1,
+                      blurRadius: 10,
+                      offset: Offset(0, 5), // Offset in x and y directions
                     ),
                   ],
                 ),
@@ -87,22 +85,19 @@ class AssignFastagPageState extends State<AssignFastagPage> {
                   inputFormatters: [
                     FilteringTextInputFormatter.allow(RegExp(r'[A-Z0-9]')),
                   ],
-                  keyboardType: TextInputType
-                      .visiblePassword, // This type shows both letters and numbers
+                  keyboardType: TextInputType.visiblePassword,
                   textCapitalization: TextCapitalization.characters,
                   decoration: InputDecoration(
                     hintText: 'Enter Vehicle Number*',
                     errorText: validatevehicle ? null : errorforvehicle,
                     errorStyle: TextStyle(color: Colors.red, fontSize: 10),
-                    border: OutlineInputBorder(), // Remove underline
+                    border: OutlineInputBorder(),
                     focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                          color: Colors.blue), // Change border color on focus
+                      borderSide: BorderSide(color: Colors.blue),
                     ),
                     enabledBorder: OutlineInputBorder(
                       borderSide: BorderSide(
-                          color: const Color.fromARGB(
-                              255, 252, 250, 250)!), // Change border color
+                          color: const Color.fromARGB(255, 252, 250, 250)!),
                     ),
                     fillColor: Theme.of(context).scaffoldBackgroundColor,
                     filled: true,
@@ -112,46 +107,45 @@ class AssignFastagPageState extends State<AssignFastagPage> {
                 ),
               ),
               SizedBox(height: 20),
-
-              // Adding space before the second text field
               Container(
                 decoration: BoxDecoration(
                   boxShadow: [
                     BoxShadow(
-                      color: Color.fromARGB(255, 219, 213, 213)
-                          .withOpacity(0.5), // Shadow color
-                      spreadRadius: 3, // Spread radius
-                      blurRadius: 5, // Blur radius
-                      offset: Offset(0, 3), // Offset in x and y directions
+                      color: Colors.grey.withOpacity(0.5),
+                      spreadRadius: 1,
+                      blurRadius: 10,
+                      offset: Offset(0, 5), // Offset in x and y directions
                     ),
                   ],
                 ),
                 child: TextField(
-  controller: mobilecontroller,
-  inputFormatters: [
-    FilteringTextInputFormatter.digitsOnly, // Allows only digits
-    LengthLimitingTextInputFormatter(10), // Limits to 10 characters
-  ],
-  keyboardType: TextInputType.number,
-  maxLength: 10, // Ensures only 10 characters can be entered
-  decoration: InputDecoration(
-    hintText: 'Enter Mobile Number*',
-    errorText: validatemobilenumber ? null : errorformobile,
-    errorStyle: TextStyle(color: Colors.red, fontSize: 10),
-    border: OutlineInputBorder(),
-    focusedBorder: OutlineInputBorder(
-      borderSide: BorderSide(color: Colors.blue),
-    ),
-    enabledBorder: OutlineInputBorder(
-      borderSide: BorderSide(color: const Color.fromARGB(255, 252, 250, 250)!),
-    ),
-    fillColor: Theme.of(context).scaffoldBackgroundColor,
-    filled: true,
-    contentPadding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
-  ),
-),
-
+                  controller: mobilecontroller,
+                  inputFormatters: [
+                    FilteringTextInputFormatter.digitsOnly,
+                    LengthLimitingTextInputFormatter(10),
+                  ],
+                  keyboardType: TextInputType.number,
+                  // maxLength: 10,
+                  decoration: InputDecoration(
+                    hintText: 'Enter Mobile Number*',
+                    errorText: validatemobilenumber ? null : errorformobile,
+                    errorStyle: TextStyle(color: Colors.red, fontSize: 10),
+                    border: OutlineInputBorder(),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.blue),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                          color: const Color.fromARGB(255, 252, 250, 250)!),
+                    ),
+                    fillColor: Theme.of(context).scaffoldBackgroundColor,
+                    filled: true,
+                    contentPadding:
+                        EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+                  ),
+                ),
               ),
+
               SizedBox(height: 30), // Adding space before the button
               SizedBox(
                 width: double.infinity,
@@ -163,20 +157,33 @@ class AssignFastagPageState extends State<AssignFastagPage> {
                     }
                   },
                   style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all<Color>(
-                      Color(0xFF0056D0),
-                    ),
                     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                       RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(
                             5.0), // Button corner radius 5px
                       ),
                     ),
+                    padding:
+                        MaterialStateProperty.all<EdgeInsets>(EdgeInsets.zero),
                   ),
-                  child: Container(
-                    width:
-                        double.infinity, // Make button width match its parent
-                    child: Center(
+                  child: Ink(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [
+                          Color(0xFF08469D),
+                          Color(0xFF0056D0),
+                          Color(0xFF0C92DD),
+                        ],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
+                      borderRadius: BorderRadius.circular(5.0),
+                    ),
+                    child: Container(
+                      height: 60,
+                      width:
+                          double.infinity, // Make button width match its parent
+                      alignment: Alignment.center,
                       child: Text(
                         'Proceed',
                         style: TextStyle(

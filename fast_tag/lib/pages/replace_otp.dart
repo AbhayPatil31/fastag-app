@@ -239,6 +239,7 @@ class _ReplaceOtpPageState extends State<ReplaceOtpPage> {
                   SizedBox(height: 20),
                   enableResend
                       ? SizedBox(
+                          height: 70,
                           width: double.infinity,
                           child: ElevatedButton(
                             onPressed: () {},
@@ -254,6 +255,7 @@ class _ReplaceOtpPageState extends State<ReplaceOtpPage> {
                               ),
                             ),
                             child: Container(
+                              height: 70,
                               width: double.infinity,
                               child: Center(
                                 child: Text(

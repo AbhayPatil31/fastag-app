@@ -3,6 +3,7 @@ import 'package:fast_tag/api/response/totalwithdrawamountresponse.dart';
 import 'package:fast_tag/pages/withdraw_request.dart';
 import 'package:flutter/material.dart';
 import 'package:fast_tag/pages/assign_vehicle_details.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
 
@@ -129,13 +130,12 @@ class _WithdrawHistoryPageState extends State<WithdrawHistoryPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          'Transaction',
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
+        title: Text('Transaction',
+            style: GoogleFonts.inter(
+              fontWeight: FontWeight.w600,
+              color: Color(0xFF1D2024),
+              fontSize: 18,
+            )),
       ),
       backgroundColor: Color(0xFFFAFAFA),
       body: Column(
@@ -161,9 +161,10 @@ class _WithdrawHistoryPageState extends State<WithdrawHistoryPage> {
                   children: [
                     Text(
                       'Transaction Summary ',
-                      style: TextStyle(
-                        fontSize: 25,
+                      style: GoogleFonts.inter(
+                        fontWeight: FontWeight.w400,
                         color: Colors.white,
+                        fontSize: 18,
                       ),
                     ),
                     SizedBox(height: 10),
@@ -225,10 +226,10 @@ class _WithdrawHistoryPageState extends State<WithdrawHistoryPage> {
                 Container(
                   child: Text(
                     'Transaction History',
-                    style: TextStyle(
-                      fontSize: 20,
+                    style: GoogleFonts.inter(
+                      fontSize: 16,
                       fontWeight: FontWeight.bold,
-                      color: Color.fromRGBO(66, 71, 82, 1),
+                      color: Color(0xFF424752),
                     ),
                   ),
                 ),
@@ -238,13 +239,8 @@ class _WithdrawHistoryPageState extends State<WithdrawHistoryPage> {
                       // Handle button press
                     },
                     child: Container(
-                      child: Image.asset(
-                        'images/list.png',
-                        width: 20,
-                        height: 20,
-                        color: Color(0xFF424752),
-                      ),
-                    ),
+                     
+                        ),
                   ),
                 ),
               ],

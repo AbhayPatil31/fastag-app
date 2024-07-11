@@ -10,6 +10,7 @@ import 'package:fast_tag/utility/colorfile.dart';
 import 'package:fast_tag/utility/progressdialog.dart';
 import 'package:fast_tag/utility/snackbardesign.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 
 List<StocklistDatum> stocklist = [];
@@ -87,14 +88,12 @@ class StockPageState extends State<StockPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
-        title: Text(
-          'Stock',
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-            color: Colors.black,
-          ),
-        ),
+        title: Text('Stock',
+            style: GoogleFonts.inter(
+              fontWeight: FontWeight.w600,
+              color: Color(0xFF1D2024),
+              fontSize: 18,
+            )),
       ),
       body: RefreshIndicator(
           onRefresh: () {

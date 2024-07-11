@@ -1,3 +1,7 @@
+import 'dart:convert';
+import 'dart:developer';
+import 'dart:typed_data';
+
 import 'package:fast_tag/utility/colorfile.dart';
 import 'package:fast_tag/utility/progressdialog.dart';
 import 'package:fast_tag/utility/snackbardesign.dart';
@@ -200,7 +204,7 @@ class _TicketDetailsPageState extends State<TicketDetailsPage> {
           SizedBox(height: 35),
           // Display ticket details
           Text(
-            'Ticket No: ${ticketData!.ticketNumber ?? ''}',
+            'Ticket No: ${ticketData?.ticketNumber ?? ''}',
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,
@@ -209,7 +213,7 @@ class _TicketDetailsPageState extends State<TicketDetailsPage> {
           ),
           SizedBox(height: 8),
           Text(
-            '${ticketData!.description ?? ''}',
+            '${ticketData?.helpTypeName ?? ''}',
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,
@@ -221,7 +225,7 @@ class _TicketDetailsPageState extends State<TicketDetailsPage> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Date: ${DateFormat('dd-MM-yyyy').format(ticketData!.ticketCreateDate!) ?? ''}',
+                'Date: ${ticketData?.ticketCreateDate != null ? DateFormat('dd-MM-yyyy').format(ticketData!.ticketCreateDate!) : ''}',
                 style: TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.w400,
@@ -241,21 +245,31 @@ class _TicketDetailsPageState extends State<TicketDetailsPage> {
           ),
           SizedBox(height: 10),
           Text(
-            '${ticketData!.description ?? ''}',
+            '${ticketData?.description ?? ''}',
             style: TextStyle(
               fontSize: 16,
-              // fontWeight: FontWeight.bold,
               color: Color.fromRGBO(53, 59, 67, 1),
             ),
           ),
           SizedBox(height: 10),
-          //below change the image after coming it from api
-          Container( 
+          // Below change the image after coming it from API
+          Container(
             height: 182,
             width: 356,
-          decoration: BoxDecoration( 
-            color: Colors.blue.shade100,
-          ),
+            decoration: BoxDecoration(
+              color: Colors.blue.shade100,
+            ),
+            child: ticketData?.getDecodedAttachment() != null
+                ? Image.memory(
+                    ticketData!.getDecodedAttachment()!,
+                    fit: BoxFit.cover,
+                  )
+                : Center(
+                    child: Text(
+                      'No Attachment',
+                      style: TextStyle(color: Colors.grey),
+                    ),
+                  ),
           ),
           // Dynamic cards from data1List
           ListView.builder(
@@ -266,7 +280,6 @@ class _TicketDetailsPageState extends State<TicketDetailsPage> {
               return Card(
                 color: Color(
                     0xFFADE0F5), // Set the background color with hex code and opacity
-
                 elevation: 0.7,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
@@ -298,7 +311,6 @@ class _TicketDetailsPageState extends State<TicketDetailsPage> {
                             '${DateFormat('dd-MM-yyyy hh:mm a').format(tickereply[index].createdOn!)}',
                             style: TextStyle(
                               fontSize: 12,
-                              // fontWeight: FontWeight.bold,
                               color: Color(0xFF424752),
                             ),
                           ),
@@ -311,7 +323,6 @@ class _TicketDetailsPageState extends State<TicketDetailsPage> {
                           '${tickereply[index].description ?? ""}',
                           style: TextStyle(
                             fontSize: 15,
-                            // fontWeight: FontWeight.bold,
                             color: Color(0xFF424752),
                           ),
                         ),
@@ -323,7 +334,6 @@ class _TicketDetailsPageState extends State<TicketDetailsPage> {
             },
           ),
           SizedBox(height: 8),
-
           Form(
             key: _formKey,
             child: Column(
@@ -378,10 +388,9 @@ class _TicketDetailsPageState extends State<TicketDetailsPage> {
                   child: ElevatedButton(
                     onPressed: () async {
                       String description = _descriptionController.text;
-
                       // Validate form and add reply only if validation passes
                       if (_formKey.currentState!.validate()) {
-                        addReply(widget.id, description);
+                        addReply(ticketData!.id!, description);
                       }
                     },
                     style: ElevatedButton.styleFrom(

@@ -1,5 +1,6 @@
 import 'package:fast_tag/api/response/getassigntagwisedresponse.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
 
@@ -98,13 +99,12 @@ class ReportIssuancePageState extends State<ReportIssuancePage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color.fromRGBO(255, 255, 255, 1),
-        title: Text(
-          'Issuance Report',
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
+        title: Text('Issuance Report',
+            style: GoogleFonts.inter(
+              fontWeight: FontWeight.w600,
+              color: Color(0xFF1D2024),
+              fontSize: 18,
+            )),
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -114,7 +114,7 @@ class ReportIssuancePageState extends State<ReportIssuancePage> {
             padding: EdgeInsets.symmetric(horizontal: 30.0),
             child: Text(
               'Filter by Date',
-              style: TextStyle(
+              style: GoogleFonts.inter(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
               ),

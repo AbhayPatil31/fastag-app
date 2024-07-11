@@ -1,7 +1,7 @@
 import 'package:fast_tag/api/network/create_json.dart';
 import 'package:fast_tag/utility/apputility.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:fast_tag/api/network/network.dart';
 import 'package:fast_tag/api/network/uri.dart';
 import 'package:fast_tag/api/response/Profileresponse.dart';
@@ -14,7 +14,7 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  Map<String, dynamic> profileData = {};
+  List<Map<String, dynamic>> profileData = [];
 
   Future<void> fetchProfileData() async {
     NetworkCall networkCall = NetworkCall();
@@ -38,15 +38,39 @@ class _ProfilePageState extends State<ProfilePage> {
             print('Profile Data: $profileDataObject');
 
             setState(() {
-              profileData = {
-                "fullName":
-                    "${profileDataObject.firstName} ${profileDataObject.lastName}",
-                "mobileNumber": profileDataObject.mobileNumber,
-                "email": profileDataObject.email,
-                "address": profileDataObject.address,
-                "pincode": profileDataObject.pincode,
-                "ifscCode": profileDataObject.ifscCode,
-              };
+              profileData = [
+                {
+                  "label": "Full Name",
+                  "value":
+                      "${profileDataObject.firstName} ${profileDataObject.lastName}",
+                  "icon": Icons.account_circle
+                },
+                {
+                  "label": "Mobile Number",
+                  "value": profileDataObject.mobileNumber,
+                  "icon": Icons.phone
+                },
+                {
+                  "label": "Email",
+                  "value": profileDataObject.email,
+                  "icon": Icons.email
+                },
+                {
+                  "label": "Address",
+                  "value": profileDataObject.address,
+                  "icon": Icons.home
+                },
+                {
+                  "label": "Pincode",
+                  "value": profileDataObject.pincode,
+                  "icon": Icons.pin_drop
+                },
+                {
+                  "label": "IFSC Code",
+                  "value": profileDataObject.ifscCode,
+                  "icon": Icons.location_city
+                },
+              ];
             });
           }
           break;
@@ -64,21 +88,17 @@ class _ProfilePageState extends State<ProfilePage> {
     fetchProfileData();
   }
 
-  Map<String, IconData> icons = {
-    "fullName": Icons.account_circle,
-    "mobileNumber": Icons.phone,
-    "email": Icons.email,
-    "address": Icons.home,
-    "ifscCode": Icons.location_city,
-    "pincode": Icons.pin_drop,
-  };
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
-        title: Text('Profile', style: TextStyle(color: Colors.black)),
+        title: Text('Profile',
+            style: GoogleFonts.inter(
+              fontWeight: FontWeight.w600,
+              color: Color(0xFF1D2024),
+              fontSize: 18,
+            )),
         iconTheme: IconThemeData(color: Colors.black),
       ),
       body: Center(
@@ -108,7 +128,11 @@ class _ProfilePageState extends State<ProfilePage> {
               color: Colors.white,
               height: 617, // Adjust height as needed
               child: Column(
-                children: profileData.entries.map((entry) {
+                children: profileData
+                    .where((item) =>
+                        item['value'] != null &&
+                        item['value'].toString().isNotEmpty)
+                    .map((item) {
                   return Padding(
                     padding: EdgeInsets.symmetric(
                       vertical: 7,
@@ -120,12 +144,12 @@ class _ProfilePageState extends State<ProfilePage> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           Icon(
-                            icons[entry.key],
+                            item['icon'],
                             color: Color.fromRGBO(121, 120, 120, 1),
                           ),
                           SizedBox(width: 30),
                           Text(
-                            entry.value ?? '',
+                            item['value'],
                             textAlign: TextAlign.start,
                             style: TextStyle(
                               color: Color(0xFF727272),

@@ -142,14 +142,14 @@ class createjson {
 
 // Raise Tickits For Add Tickits
  String ticketraiseresponseFromJson(
-    String? agent_id, String? description, String? help_type_id, File? attachement) {
+    String? agent_id, String? description, String? help_type_id, String? attachement) {
   try {
     JsonEncoder encoder = JsonEncoder.withIndent('');
     Ticketraisejson loginjsonCreation = Ticketraisejson(
       agent_id: agent_id,
       description: description,
       help_type_id: help_type_id,
-      attachement: attachement != null ? path.basename(attachement.path) : null, // Add the image path if it exists
+      attachement: attachement, // Add the image path if it exists
     );
     var result = Ticketraisejson.fromJson(loginjsonCreation.toJson());
     String str = encoder.convert(result);

@@ -12,6 +12,7 @@ import 'package:fast_tag/utility/progressdialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fast_tag/pages/assign_vehicle_details.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
@@ -137,13 +138,12 @@ class _WalletPageState extends State<WalletPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          'Wallet',
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
+        title: Text('Wallet',
+            style: GoogleFonts.inter(
+              fontWeight: FontWeight.w600,
+              color: Color(0xFF1D2024),
+              fontSize: 18,
+            )),
       ),
       backgroundColor: Color(0xFFFAFAFA),
       body: Column(
@@ -169,9 +169,10 @@ class _WalletPageState extends State<WalletPage> {
                   children: [
                     Text(
                       'Transaction Summary',
-                      style: TextStyle(
-                        fontSize: 25,
+                      style: GoogleFonts.inter(
+                        fontWeight: FontWeight.w400,
                         color: Colors.white,
+                        fontSize: 16,
                       ),
                     ),
                     SizedBox(height: 10),
@@ -224,7 +225,7 @@ class _WalletPageState extends State<WalletPage> {
                         borderRadius: BorderRadius.circular(0),
                       ),
                     ),
-                    icon: Icon(CupertinoIcons.add),
+                    icon: Icon(CupertinoIcons.add, color: Colors.white),
                   ),
                 ),
               ],
@@ -242,8 +243,8 @@ class _WalletPageState extends State<WalletPage> {
                 Container(
                   child: Text(
                     'Transaction History',
-                    style: TextStyle(
-                      fontSize: 20,
+                    style: GoogleFonts.inter(
+                      fontSize: 16,
                       fontWeight: FontWeight.bold,
                       color: Color(0xFF424752),
                     ),
@@ -254,14 +255,7 @@ class _WalletPageState extends State<WalletPage> {
                     onTap: () {
                       // Handle button press
                     },
-                    child: Container(
-                      child: Image.asset(
-                        'images/list.png',
-                        width: 20,
-                        height: 20,
-                        color: Color(0xFF424752),
-                      ),
-                    ),
+                    child: Container(),
                   ),
                 ),
               ],
@@ -288,8 +282,8 @@ class _WalletPageState extends State<WalletPage> {
                               ),
                               Text(
                                 ' No transaction history found ',
-                                style: TextStyle(
-                                    fontSize: 20,
+                                style: GoogleFonts.inter(
+                                    fontSize: 18,
                                     color: Colors.grey,
                                     fontWeight: FontWeight.w500),
                               ),
@@ -298,8 +292,8 @@ class _WalletPageState extends State<WalletPage> {
                               ),
                               Text(
                                 "Looks like you haven't any transaction yet ",
-                                style: TextStyle(
-                                  fontSize: 16,
+                                style: GoogleFonts.inter(
+                                  fontSize: 14,
                                   color: Colors.grey,
                                 ),
                                 textAlign: TextAlign.center,
@@ -410,14 +404,14 @@ class _WalletPageState extends State<WalletPage> {
                         ),
                       ),
                       SizedBox(width: 5),
-                  Padding(
-                      padding: const EdgeInsets.all(5.0),
-                      child: Image.asset(
-                                'images/wallet.png',
-                                width: 20,
-                                height: 20,
+                      Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: Image.asset(
+                          'images/wallet.png',
+                          width: 20,
+                          height: 20,
+                        ),
                       ),
-                  ),
                     ],
                   )
                 ],

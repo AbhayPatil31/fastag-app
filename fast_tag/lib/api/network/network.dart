@@ -51,14 +51,18 @@ import '../response/Ticketraiseresponse.dart';
 class NetworkCall {
   Future<List<Object?>?> postMethod(
       int requestCode, String url, String body, BuildContext context) async {
+        log("Request Code : $requestCode");
+        log("body : $body");
+        log("URL : $url");
     var response = await http.post(Uri.parse(url), body: body);
     // var data = response.body;
     try {
       if (response.statusCode == 200) {
+      
         String ResponseString = response.body;
 
         String str = "[" + ResponseString + "]";
-        log(str);
+        log("Response : $str");
 
         switch (requestCode) {
           case 1:
@@ -194,7 +198,7 @@ class NetworkCall {
         return null;
       }
     } catch (e) {
-      print(e.toString());
+      log(e.toString());
       // SnackBarDesign("Something went wrong", context);
     }
     return null;

@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_masked_text2/flutter_masked_text2.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../api/network/create_json.dart';
 import '../api/network/network.dart';
@@ -105,13 +106,12 @@ class ReplaceFastagPageState extends State<ReplaceFastagPage> {
       appBar: AppBar(
         // backgroundColor: Color(0xFFF5F5F5), // Set background color to #F5F5F5
 
-        title: Text(
-          'Replace FasTag',
-          style: TextStyle(
-            fontSize: 20, // 25px size
-            fontWeight: FontWeight.bold, // Bold text
-          ),
-        ),
+        title: Text('Replace FasTag',
+            style: GoogleFonts.inter(
+              fontWeight: FontWeight.w600,
+              color: Color(0xFF1D2024),
+              fontSize: 18,
+            )),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -122,8 +122,8 @@ class ReplaceFastagPageState extends State<ReplaceFastagPage> {
               SizedBox(height: 50),
               Text(
                 'Enter Details',
-                style: TextStyle(
-                  fontSize: 25, // 25px size
+                style: GoogleFonts.inter(
+                  fontSize: 18, // 25px size
                   fontWeight: FontWeight.bold, // Bold text
                 ),
               ),
@@ -135,31 +135,44 @@ class ReplaceFastagPageState extends State<ReplaceFastagPage> {
               SizedBox(height: 20),
               barcode(),
               SizedBox(
-                height: 20,
+                height: 3,
               ),
               reasonselectwidget(),
               SizedBox(height: 30), // Adding space before the button
               SizedBox(
+                height: 60,
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () {
                     validatefields();
                   },
                   style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all<Color>(
-                      Color(0xFF0056D0),
-                    ),
                     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                       RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(
                             5.0), // Button corner radius 5px
                       ),
                     ),
+                    padding:
+                        MaterialStateProperty.all<EdgeInsets>(EdgeInsets.zero),
                   ),
-                  child: Container(
-                    width:
-                        double.infinity, // Make button width match its parent
-                    child: Center(
+                  child: Ink(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [
+                          Color(0xFF08469D),
+                          Color(0xFF0056D0),
+                          Color(0xFF0C92DD),
+                        ],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
+                      borderRadius: BorderRadius.circular(5.0),
+                    ),
+                    child: Container(
+                      width:
+                          double.infinity, // Make button width match its parent
+                      alignment: Alignment.center,
                       child: Text(
                         'Submit',
                         style: TextStyle(
@@ -401,7 +414,7 @@ class ReplaceFastagPageState extends State<ReplaceFastagPage> {
               hint: Text(
                 'Select Reason*',
                 style: TextStyle(
-                  fontSize: 14,
+                  fontSize: 16,
                   color: Theme.of(context).hintColor,
                 ),
               ),

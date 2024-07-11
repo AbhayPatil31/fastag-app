@@ -7,6 +7,7 @@ import 'package:fast_tag/pages/skeletonpage.dart';
 import 'package:fast_tag/utility/apputility.dart';
 import 'package:fast_tag/utility/progressdialog.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 
 import '../api/network/network.dart';
@@ -90,13 +91,12 @@ class _FastTagRequestListPageState extends State<FastTagRequestListPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color.fromRGBO(255, 255, 255, 1),
-        title: Text(
-          'Fastag Request List',
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
+        title: Text('Fastag Request List',
+            style: GoogleFonts.inter(
+              fontWeight: FontWeight.w600,
+              color: Color(0xFF1D2024),
+              fontSize: 18,
+            )),
       ),
       body: fasttagrequestlist.isEmpty
           ? nodata

@@ -2,6 +2,7 @@ import 'package:fast_tag/api/response/getnotificationresponse.dart';
 import 'package:fast_tag/utility/progressdialog.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_connect/http/src/utils/utils.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
 
@@ -89,7 +90,12 @@ class NotificationPageState extends State<NotificationPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('Notifications'),
+          title: Text('Notifications',
+              style: GoogleFonts.inter(
+                fontWeight: FontWeight.w600,
+                color: Color(0xFF1D2024),
+                fontSize: 18,
+              )),
         ),
         body: RefreshIndicator(
             onRefresh: () {

@@ -5,6 +5,7 @@ import 'package:fast_tag/pages/setvehicledetails.dart';
 import 'package:fast_tag/utility/progressdialog.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../api/network/create_json.dart';
 import '../api/network/network.dart';
@@ -78,13 +79,12 @@ class _AssignOtpPageState extends State<AssignOtpPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          'OTP Verification',
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
+        title: Text('OTP Verification',
+            style: GoogleFonts.inter(
+              fontWeight: FontWeight.w600,
+              color: Color(0xFF1D2024),
+              fontSize: 18,
+            )),
       ),
       body: Column(
         children: [
@@ -105,13 +105,12 @@ class _AssignOtpPageState extends State<AssignOtpPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    'OTP Verification',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 25,
-                    ),
-                  ),
+                  Text('OTP Verification',
+                      style: GoogleFonts.inter(
+                        fontWeight: FontWeight.w500,
+                        color: Color(0xFF1D2024),
+                        fontSize: 18,
+                      )),
                   SizedBox(height: 5),
                   Container(
                     width: MediaQuery.of(context).size.width * 0.8,
@@ -122,13 +121,13 @@ class _AssignOtpPageState extends State<AssignOtpPage> {
                             style: TextStyle(
                                 color: Color(0xffA1A8B0),
                                 fontWeight: FontWeight.w400,
-                                fontSize: 18),
+                                fontSize: 16),
                             children: <TextSpan>[
                           TextSpan(
                               text: widget.mobilenumber.replaceRange(
                                   6, widget.mobilenumber.length, 'XXXX'),
                               style: TextStyle(
-                                  fontSize: 18,
+                                  fontSize: 16,
                                   fontWeight: FontWeight.w400,
                                   color: Color(0xff101623)))
                         ])),
@@ -142,6 +141,7 @@ class _AssignOtpPageState extends State<AssignOtpPage> {
                   SizedBox(height: 20),
                   enableResend
                       ? SizedBox(
+                          height: 60,
                           width: double.infinity,
                           child: ElevatedButton(
                             onPressed: () {},
@@ -157,6 +157,7 @@ class _AssignOtpPageState extends State<AssignOtpPage> {
                               ),
                             ),
                             child: Container(
+                              height: 70,
                               width: double.infinity,
                               child: Center(
                                 child: Text(

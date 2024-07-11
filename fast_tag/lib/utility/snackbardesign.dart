@@ -22,7 +22,7 @@ void SnackBarDesign(String Message, BuildContext context, Color backgroundColor,
 void SomethingWentWrongSnackBarDesign(BuildContext context) {
   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
     content: new Text(
-      "Something went wrong!",
+      "No data found!",
       style: TextStyle(color: colorfile().errormessagetxColor),
     ),
     backgroundColor: colorfile().errormessagebcColor.withOpacity(0.7),

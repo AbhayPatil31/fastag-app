@@ -21,6 +21,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/widgets.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -253,7 +254,7 @@ class _MyDashboardState extends State<MyDashboard> {
           title: Text(
             'Shaurya Softrack',
             style: TextStyle(
-              fontSize: 30,
+              fontSize: 22,
               fontWeight: FontWeight.w600,
               color: Colors.white,
             ),
@@ -284,7 +285,7 @@ class _MyDashboardState extends State<MyDashboard> {
                       child: Text(
                         "Hi, ${AppUtility.Name} 🙋‍♂️ ",
                         style: TextStyle(
-                          fontSize: 20, // Add your desired font size here
+                          fontSize: 18, // Add your desired font size here
                           color: Colors.white,
                           fontWeight: FontWeight
                               .w600, // Add your desired text color here
@@ -750,7 +751,12 @@ class _MyDashboardState extends State<MyDashboard> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text("Confirmation"),
-          content: Text("Are you sure you want to exit?"),
+          content: Text("Are you sure you want to exit?",
+              style: GoogleFonts.inter(
+                fontWeight: FontWeight.w500,
+                color: Color(0xFF1D2024),
+                fontSize: 18,
+              )),
           actions: <Widget>[
             TextButton(
               onPressed: () async {

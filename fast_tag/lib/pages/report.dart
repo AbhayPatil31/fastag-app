@@ -2,6 +2,7 @@ import 'package:fast_tag/pages/report_inssurance.dart';
 import 'package:fast_tag/pages/report_pending.dart';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../api/network/create_json.dart';
 import '../api/network/network.dart';
@@ -90,13 +91,12 @@ class _ReportPageState extends State<ReportPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          'Reports',
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
+        title: Text('Reports',
+            style: GoogleFonts.inter(
+              fontWeight: FontWeight.w600,
+              color: Color(0xFF1D2024),
+              fontSize: 18,
+            )),
       ),
       body: RefreshIndicator(
         onRefresh: () {

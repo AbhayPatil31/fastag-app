@@ -63,9 +63,9 @@ class AssignFastagPageState extends State<AssignFastagPage> {
               ),
               Text(
                 'Enter Details',
-                style: TextStyle(
-                  fontSize: 20, // 25px size
-                  fontWeight: FontWeight.bold, // Bold text
+                style: GoogleFonts.inter(
+                  fontSize: 18, // 25px size
+                  fontWeight: FontWeight.w500, // Bold text
                 ),
               ),
               SizedBox(height: 20), // Adding space before the first text field

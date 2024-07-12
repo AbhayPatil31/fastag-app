@@ -39,7 +39,7 @@ class Addcustomerdetailscall {
   factory Addcustomerdetailscall.fromJson(Map<String, dynamic> json) =>
       Addcustomerdetailscall(
         name: json["name"],
-        lastname: json["lastName "],
+        lastname: json["lastName"],
         dob: json["dob"],
         docType: json["docType"],
         docNo: json["docNo"],
@@ -52,7 +52,7 @@ class Addcustomerdetailscall {
 
   Map<String, dynamic> toJson() => {
         "name": name,
-        "lastName ":lastname,
+        "lastName": lastname,
         "dob": dob,
         "docType": docType,
         "docNo": docNo,

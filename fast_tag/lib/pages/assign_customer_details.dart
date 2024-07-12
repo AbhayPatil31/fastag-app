@@ -14,6 +14,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get_connect/http/src/utils/utils.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../api/network/create_json.dart';
@@ -117,9 +118,10 @@ class CustomerDetailsPageState extends State<CustomerDetailsPage> {
       appBar: AppBar(
         title: Text(
           'Customer Details',
-          style: TextStyle(
-            fontSize: 20, // 25px size
-            fontWeight: FontWeight.bold, // Bold text
+          style: GoogleFonts.inter(
+            color: Color(0xFF1D2024),
+            fontSize: 18, // 25px size
+            fontWeight: FontWeight.w600, // Bold text
           ),
         ),
       ),
@@ -134,14 +136,12 @@ class CustomerDetailsPageState extends State<CustomerDetailsPage> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    'Customer Details',
-                    style: TextStyle(
-                      fontSize: 25,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black87,
-                    ),
-                  ),
+                  Text('Customer Details',
+                      style: GoogleFonts.inter(
+                        fontWeight: FontWeight.w500,
+                        color: Color(0xFF1D2024),
+                        fontSize: 16,
+                      )),
                   CircleAvatar(
                     radius: 30,
                     backgroundColor: Colors.white,
@@ -160,21 +160,26 @@ class CustomerDetailsPageState extends State<CustomerDetailsPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      'Enter Your Details',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20, // Adjust the font size as needed
-                      ),
-                    ),
+                    Text('Enter Your Details',
+                        style: GoogleFonts.inter(
+                          fontWeight: FontWeight.w500,
+                          color: Color(0xFF1D2024),
+                          fontSize: 15,
+                        )),
                     SizedBox(height: 15),
                     firstnamewidget(),
                     lastnamewidget(),
                     dobwidget(),
                     idprofselectwidget(),
+                    const SizedBox(
+                      height: 15,
+                    ),
                     idselectedValue == "2" || idselectedValue == "4"
                         ? expwidget()
                         : Container(),
+                    // const SizedBox(
+                    //   height: 15,
+                    // ),
                     idnumberwidget(),
                     planselectwidget(),
                     // rcImage(),
@@ -187,31 +192,52 @@ class CustomerDetailsPageState extends State<CustomerDetailsPage> {
             SizedBox(height: 30), // Adding space before the button
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 30.0),
-              child: ElevatedButton(
-                onPressed: () {
-                  // Implement button onPressed
-                  validatefields();
-                },
-                style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all<Color>(
-                    Color(0xFF0056D0),
+              child: Container(
+                height: 50,
+                margin: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      Color(0xFF08469D),
+                      Color(0xFF0056D0),
+                      Color(0xFF0C92DD),
+                    ],
+                    begin: Alignment.centerLeft,
+                    end: Alignment.centerRight,
                   ),
-                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                    RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(
-                          5.0), // Button corner radius 5px
+                  borderRadius: BorderRadius.circular(5.0),
+                ),
+                child: ElevatedButton(
+                  onPressed: () {
+                    // Implement button onPressed
+                    validatefields();
+                  },
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all<Color>(
+                      Colors
+                          .transparent, // Set background to transparent to show gradient
+                    ),
+                    shadowColor: MaterialStateProperty.all<Color>(
+                      Colors.transparent, // No shadow color
+                    ),
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5.0),
+                      ),
                     ),
                   ),
-                ),
-                child: Container(
-                  height: 50,
-                  child: Center(
-                    child: Text(
-                      'Next',
-                      style: TextStyle(
-                        color: Colors
-                            .white, // Set text color to white for better contrast
-                        fontSize: 18.0,
+                  child: Container(
+                    height: 60,
+                    width:
+                        double.infinity, // Make button width match its parent
+                    child: Center(
+                      child: Text(
+                        'Next',
+                        style: TextStyle(
+                          color: Colors
+                              .white, // Set text color to white for better contrast
+                          fontSize: 18.0,
+                        ),
                       ),
                     ),
                   ),
@@ -262,6 +288,7 @@ class CustomerDetailsPageState extends State<CustomerDetailsPage> {
       ),
     );
   }
+
   Widget lastnamewidget() {
     return Container(
       margin: EdgeInsets.only(bottom: 20),
@@ -561,32 +588,35 @@ class CustomerDetailsPageState extends State<CustomerDetailsPage> {
         ],
       ),
       child: TextField(
-  controller: _idnumbercontroller,
-  textCapitalization: TextCapitalization.characters, // Forces capitalization
-  inputFormatters: [
-    FilteringTextInputFormatter.allow(RegExp(r'[A-Z0-9]')), // Allow only uppercase letters and digits
-  ],
-  onChanged: (value) {
-    validateidnumber = true;
-    setState(() {});
-  },
-  decoration: InputDecoration(
-    hintText: 'ID Proof Number*',
-    errorText: validateidnumber ? null : errorforidnumber,
-    errorStyle: TextStyle(color: Colors.red, fontSize: 10),
-    border: OutlineInputBorder(),
-    focusedBorder: OutlineInputBorder(
-      borderSide: BorderSide(color: Colors.blue),
-    ),
-    enabledBorder: OutlineInputBorder(
-      borderSide: BorderSide(color: const Color.fromARGB(255, 252, 250, 250)!),
-    ),
-    fillColor: Theme.of(context).scaffoldBackgroundColor,
-    filled: true,
-    contentPadding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
-  ),
-),
- );
+        controller: _idnumbercontroller,
+        textCapitalization:
+            TextCapitalization.characters, // Forces capitalization
+        inputFormatters: [
+          FilteringTextInputFormatter.allow(
+              RegExp(r'[A-Z0-9]')), // Allow only uppercase letters and digits
+        ],
+        onChanged: (value) {
+          validateidnumber = true;
+          setState(() {});
+        },
+        decoration: InputDecoration(
+          hintText: 'ID Proof Number*',
+          errorText: validateidnumber ? null : errorforidnumber,
+          errorStyle: TextStyle(color: Colors.red, fontSize: 10),
+          border: OutlineInputBorder(),
+          focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.blue),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderSide:
+                BorderSide(color: const Color.fromARGB(255, 252, 250, 250)!),
+          ),
+          fillColor: Theme.of(context).scaffoldBackgroundColor,
+          filled: true,
+          contentPadding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+        ),
+      ),
+    );
   }
 
   Widget planselectwidget() {
@@ -730,7 +760,7 @@ class CustomerDetailsPageState extends State<CustomerDetailsPage> {
       errorforexpirydate = "Please select expiry date ";
   validatefields() {
     if (_namecontroller.text.isEmpty &&
-    _lastnamecontroller.text.isEmpty &&
+        _lastnamecontroller.text.isEmpty &&
         _dobcontroller.text.isEmpty &&
         idselectedValue == null &&
         _idnumbercontroller.text.isEmpty &&
@@ -812,8 +842,14 @@ class CustomerDetailsPageState extends State<CustomerDetailsPage> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => AssignVehicleDetails(
-                      widget.sessionId, widget.vehiclenumber)),
+                builder: (context) {
+                  // super.dispose();
+                  return AssignVehicleDetails(
+                    widget.sessionId,
+                    widget.vehiclenumber,
+                  );
+                },
+              ),
             );
             break;
           case "false":

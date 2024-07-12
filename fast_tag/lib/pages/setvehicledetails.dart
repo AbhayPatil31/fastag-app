@@ -16,6 +16,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:get/get_connect/http/src/utils/utils.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../api/response/getmapperclassresponse.dart';
 import '../api/response/vehiclemakerresponse.dart';
@@ -172,6 +173,7 @@ class SetvehicledetailsState extends State<SetVehicleDetails> {
       print(e.toString());
     }
   }
+
 //below i have to work today,have to add get_mapper_class_api response id to below list
   List<String> tagVehicleClassID = [];
   Future<void> Networkcallforgetvehicleclass() async {
@@ -209,13 +211,14 @@ class SetvehicledetailsState extends State<SetVehicleDetails> {
 
   Future<void> Networkcallforgetmapperclass(String vehicleId) async {
     try {
-       String vehiclclassid = createjson().createjsonforgetmapperclass(
-          vehicleId, context);
+      String vehiclclassid =
+          createjson().createjsonforgetmapperclass(vehicleId, context);
       List<Object?>? list = await NetworkCall().postMethod(
-          URLS().get_mapper_class_api,
-          URLS().get_mapper_class_api_url,
-          vehiclclassid,
-          context,);
+        URLS().get_mapper_class_api,
+        URLS().get_mapper_class_api_url,
+        vehiclclassid,
+        context,
+      );
       if (list != null) {
         List<Getmapperclassresponse> response = List.from(list!);
         String status = response[0].status!;
@@ -279,13 +282,12 @@ class SetvehicledetailsState extends State<SetVehicleDetails> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          'Set vehicle details',
-          style: TextStyle(
-            fontSize: 20, // 25px size
-            fontWeight: FontWeight.bold, // Bold text
-          ),
-        ),
+        title: Text('Set vehicle details',
+            style: GoogleFonts.inter(
+              fontWeight: FontWeight.w600,
+              color: Color(0xFF1D2024),
+              fontSize: 18,
+            )),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -421,22 +423,38 @@ class SetvehicledetailsState extends State<SetVehicleDetails> {
               Container(
                 height: 50,
                 margin: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      Color(0xFF08469D),
+                      Color(0xFF0056D0),
+                      Color(0xFF0C92DD),
+                    ],
+                    begin: Alignment.centerLeft,
+                    end: Alignment.centerRight,
+                  ),
+                  borderRadius: BorderRadius.circular(5.0),
+                ),
                 child: ElevatedButton(
                   onPressed: () {
                     validatefields();
                   },
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all<Color>(
-                      Color(0xFF0056D0),
+                      Colors
+                          .transparent, // Set background to transparent to show gradient
+                    ),
+                    shadowColor: MaterialStateProperty.all<Color>(
+                      Colors.transparent, // No shadow color
                     ),
                     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                       RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(
-                            5.0), // Button corner radius 5px
+                        borderRadius: BorderRadius.circular(5.0),
                       ),
                     ),
                   ),
                   child: Container(
+                    height: 60,
                     width:
                         double.infinity, // Make button width match its parent
                     child: Center(
@@ -1197,7 +1215,8 @@ class SetvehicledetailsState extends State<SetVehicleDetails> {
                     onChanged: (value) {
                       setState(() {
                         tagVehicleClassIDselectedValue = value;
-                        Networkcallforgetmapperclass(tagVehicleClassIDselectedValue!);
+                        Networkcallforgetmapperclass(
+                            tagVehicleClassIDselectedValue!);
                       });
                     },
                     buttonStyleData: ButtonStyleData(

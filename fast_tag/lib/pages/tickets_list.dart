@@ -147,42 +147,43 @@ class _TicketsListPageState extends State<TicketsListPage> {
                           height: 400,
                         ),
                       ),
-                      SizedBox(
-                        width: 180.0,
-                        height: 50.0,
-                        child: ElevatedButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => TicketsListPage(),
-                              ),
-                            );
-                          },
-                          style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all<Color>(
-                              Color(0xFF0056D0),
-                            ),
-                            shape: MaterialStateProperty.all<
-                                RoundedRectangleBorder>(
-                              RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(5.0),
-                              ),
-                            ),
-                          ),
-                          child: Container(
-                            child: Center(
-                              child: Text(
-                                'Raise Ticket',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 18.0,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
+                      //below code is commented due to double button is present on the same screen which is an functional issue
+                      // SizedBox(
+                      //   width: 180.0,
+                      //   height: 50.0,
+                      //   child: ElevatedButton(
+                      //     onPressed: () {
+                      //       Navigator.push(
+                      //         context,
+                      //         MaterialPageRoute(
+                      //           builder: (context) => TicketsListPage(),
+                      //         ),
+                      //       );
+                      //     },
+                      //     style: ButtonStyle(
+                      //       backgroundColor: MaterialStateProperty.all<Color>(
+                      //         Color(0xFF0056D0),
+                      //       ),
+                      //       shape: MaterialStateProperty.all<
+                      //           RoundedRectangleBorder>(
+                      //         RoundedRectangleBorder(
+                      //           borderRadius: BorderRadius.circular(5.0),
+                      //         ),
+                      //       ),
+                      //     ),
+                      //     child: Container(
+                      //       child: Center(
+                      //         child: Text(
+                      //           'Raise Ticket',
+                      //           style: TextStyle(
+                      //             color: Colors.white,
+                      //             fontSize: 18.0,
+                      //           ),
+                      //         ),
+                      //       ),
+                      //     ),
+                      //   ),
+                      // ),
                     ],
                   )
             : ListView.builder(

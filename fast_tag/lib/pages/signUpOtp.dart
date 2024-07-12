@@ -183,22 +183,30 @@ class _SignUpOtpPageState extends State<SignUpOtpPage> {
                 Container(
                   width: MediaQuery.of(context).size.width * 0.8,
                   child: RichText(
-                      text: TextSpan(
-                          text:
-                              'Please enter the 4 digit security code we just sent you at ',
-                          style: TextStyle(
-                              color: Color(0xff3B4453),
-                              fontWeight: FontWeight.w400,
-                              fontSize: 14),
-                          children: <TextSpan>[
+                    text: TextSpan(
+                      text:
+                          'Please enter the 4 digit security code we just sent you at ',
+                      style: TextStyle(
+                        color: Color(0xff3B4453),
+                        fontWeight: FontWeight.w400,
+                        fontSize: 14,
+                      ),
+                      children: <TextSpan>[
                         TextSpan(
-                            text: widget.mobilenumber.replaceRange(
-                                6, widget.mobilenumber.length, 'XXXX'),
-                            style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w400,
-                                color: Color(0xff3B4453)))
-                      ])),
+                          text: widget.mobilenumber.replaceRange(
+                            0,
+                            widget.mobilenumber.length - 2,
+                            'X' * (widget.mobilenumber.length - 2),
+                          ),
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w400,
+                            color: Color(0xff3B4453),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
                 SizedBox(height: 40),
                 Row(

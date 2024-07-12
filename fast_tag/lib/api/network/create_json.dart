@@ -428,6 +428,7 @@ class createjson {
       JsonEncoder encoder = JsonEncoder.withIndent('');
       Addcustomerdetailscall Stocklistcalljson = Addcustomerdetailscall(
         name: name,
+        lastname: lastname,
         dob: dob,
         docType: idtype,
         docNo: idnumbe,

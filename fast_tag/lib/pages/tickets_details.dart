@@ -196,6 +196,9 @@ class _TicketDetailsPageState extends State<TicketDetailsPage> {
   }
 
   Widget transactionCard() {
+    bool hasAttachment = ticketData!.attachement!.isNotEmpty &&
+        ticketData!.getDecodedAttachment() != null;
+
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 0.0),
       child: Column(
@@ -252,34 +255,32 @@ class _TicketDetailsPageState extends State<TicketDetailsPage> {
             ),
           ),
           SizedBox(height: 10),
-          // Below change the image after coming it from API
-          Container(
-            height: 182,
-            width: 356,
-            decoration: BoxDecoration(
-              color: Colors.blue.shade100,
+          // Conditionally display image container
+          if (hasAttachment)
+            Container(
+              height: 182,
+              width: 356,
+              decoration: BoxDecoration(
+                color: Colors.blue.shade100,
+              ),
+              child: Image.memory(
+                ticketData!.getDecodedAttachment()!,
+                fit: BoxFit.cover,
+              ),
             ),
-            child: ticketData?.getDecodedAttachment() != null
-                ? Image.memory(
-                    ticketData!.getDecodedAttachment()!,
-                    fit: BoxFit.cover,
-                  )
-                : Center(
-                    child: Text(
-                      'No Attachment',
-                      style: TextStyle(color: Colors.grey),
-                    ),
-                  ),
-          ),
-          // Dynamic cards from data1List
+          SizedBox(
+              height: hasAttachment
+                  ? 10
+                  : 0), // Adjust spacing based on image presence
+
+          // Dynamic cards from tickereply list
           ListView.builder(
             shrinkWrap: true,
             physics: NeverScrollableScrollPhysics(),
             itemCount: tickereply.length,
             itemBuilder: (context, index) {
               return Card(
-                color: Color(
-                    0xFFADE0F5), // Set the background color with hex code and opacity
+                color: Color(0xFFADE0F5),
                 elevation: 0.7,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),

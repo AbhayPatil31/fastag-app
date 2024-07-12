@@ -327,7 +327,11 @@ class _WalletPageState extends State<WalletPage> {
     String type = wallettransactionlist.transactionType == "1"
         ? 'Credited to Wallet'
         : 'Debited to Wallet';
-
+    DateTime createdOn = DateTime.now(); // Replace with your DateTime object
+    String formattedDate =
+        DateFormat('dd-MM-yyyy').format(wallettransactionlist!.createdOn!);
+    String formattedTime =
+        DateFormat('hh:mm a').format(wallettransactionlist!.createdOn!);
     return Padding(
       padding: EdgeInsets.only(bottom: 10.0),
       child: Card(
@@ -385,8 +389,15 @@ class _WalletPageState extends State<WalletPage> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    DateFormat('dd-MM-yyyy')
-                        .format(wallettransactionlist.createdOn!),
+                    formattedDate,
+                    style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w400,
+                      color: Color(0xFF424752),
+                    ),
+                  ),
+                  Text(
+                    formattedTime,
                     style: TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.w400,

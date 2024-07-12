@@ -208,7 +208,6 @@ class _RaiseTicketsPageState extends State<RaiseTicketsPage> {
                         boxShadow: [
                           BoxShadow(
                             color: Colors.grey.withOpacity(0.5),
-                            // spreadRadius: 2,
                             blurRadius: 5,
                             offset: Offset(0, 3),
                           ),
@@ -217,7 +216,7 @@ class _RaiseTicketsPageState extends State<RaiseTicketsPage> {
                       child: DropdownButtonFormField2<String>(
                         decoration: InputDecoration(
                           filled: true,
-                          fillColor: Colors.white,
+                          fillColor: Color.fromARGB(255, 247, 244, 244),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(8.0),
                             borderSide: BorderSide(
@@ -228,8 +227,9 @@ class _RaiseTicketsPageState extends State<RaiseTicketsPage> {
                             borderRadius: BorderRadius.circular(8.0),
                             borderSide: BorderSide(color: Colors.blue),
                           ),
-                          contentPadding: EdgeInsets.symmetric(
-                              vertical: 15, horizontal: 20),
+                          // contentPadding: EdgeInsets.symmetric(
+                          //     vertical: 10,
+                          //     horizontal: 20), // Adjust vertical padding
                           hintText: 'Select Your Help Type',
                           hintStyle: TextStyle(
                             color: Color(0xFF1D2024),
@@ -259,14 +259,6 @@ class _RaiseTicketsPageState extends State<RaiseTicketsPage> {
                           return null;
                         },
                         value: selectedHelpTypeId,
-
-                        // dropdownDecoration: BoxDecoration(
-                        //   borderRadius: BorderRadius.circular(14),
-                        //   color: Colors.white,
-                        // ),
-                        // scrollbarRadius: const Radius.circular(40),
-                        // scrollbarThickness: 6,
-                        // scrollbarAlwaysShow: true,
                       ),
                     ),
                     Container(

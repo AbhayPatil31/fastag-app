@@ -63,6 +63,9 @@ class _AssignOtpPageState extends State<AssignOtpPage> {
         maxLength: 1,
         textAlign: TextAlign.center,
         decoration: InputDecoration(
+          alignLabelWithHint: true,
+          contentPadding:
+              EdgeInsets.symmetric(vertical: 10.0, horizontal: 12.0),
           counterText: "",
           border: OutlineInputBorder(),
         ),
@@ -78,7 +81,10 @@ class _AssignOtpPageState extends State<AssignOtpPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBody: true,
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
+        // forceMaterialTransparency: true,
         title: Text('OTP Verification',
             style: GoogleFonts.inter(
               fontWeight: FontWeight.w600,
@@ -115,22 +121,30 @@ class _AssignOtpPageState extends State<AssignOtpPage> {
                   Container(
                     width: MediaQuery.of(context).size.width * 0.8,
                     child: RichText(
-                        text: TextSpan(
-                            text:
-                                'Please enter the 6 digit security code we just sent you at ',
-                            style: TextStyle(
-                                color: Color(0xffA1A8B0),
-                                fontWeight: FontWeight.w400,
-                                fontSize: 16),
-                            children: <TextSpan>[
+                      text: TextSpan(
+                        text:
+                            'Please enter the 6 digit security code we just sent you at ',
+                        style: TextStyle(
+                          color: Color(0xffA1A8B0),
+                          fontWeight: FontWeight.w400,
+                          fontSize: 16,
+                        ),
+                        children: <TextSpan>[
                           TextSpan(
-                              text: widget.mobilenumber.replaceRange(
-                                  6, widget.mobilenumber.length, 'XXXX'),
-                              style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w400,
-                                  color: Color(0xff101623)))
-                        ])),
+                            text: widget.mobilenumber.replaceRange(
+                              0,
+                              widget.mobilenumber.length - 2,
+                              'X' * (widget.mobilenumber.length - 2),
+                            ),
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w400,
+                              color: Color(0xff101623),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
                   SizedBox(height: 30),
                   Row(
@@ -172,38 +186,56 @@ class _AssignOtpPageState extends State<AssignOtpPage> {
                           ),
                         )
                       : SizedBox(
+                          height: 60,
                           width: double.infinity,
-                          child: ElevatedButton(
-                            onPressed: () {
-                              if (_controllers.isEmpty) {
-                                SnackBarDesign(
-                                    "Please enter OTP",
-                                    context,
-                                    colorfile().errormessagebcColor,
-                                    colorfile().errormessagetxColor);
-                              } else {
-                                Networkcallforverifyotp();
-                              }
-                            },
-                            style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all<Color>(
-                                Color(0xFF0056D0),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                colors: [
+                                  Color(0xFF08469D),
+                                  Color(0xFF0056D0),
+                                  Color(0xFF0C92DD),
+                                ],
+                                begin: Alignment.centerLeft,
+                                end: Alignment.centerRight,
                               ),
-                              shape: MaterialStateProperty.all<
-                                  RoundedRectangleBorder>(
-                                RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(5.0),
+                              borderRadius: BorderRadius.circular(5.0),
+                            ),
+                            child: ElevatedButton(
+                              onPressed: () {
+                                if (_controllers.isEmpty) {
+                                  SnackBarDesign(
+                                      "Please enter OTP",
+                                      context,
+                                      colorfile().errormessagebcColor,
+                                      colorfile().errormessagetxColor);
+                                } else {
+                                  Networkcallforverifyotp();
+                                }
+                              },
+                              style: ButtonStyle(
+                                backgroundColor:
+                                    MaterialStateProperty.all<Color>(
+                                  Colors.transparent,
+                                ),
+                                shadowColor: MaterialStateProperty.all<Color>(
+                                    Colors.transparent),
+                                shape: MaterialStateProperty.all<
+                                    RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(5.0),
+                                  ),
                                 ),
                               ),
-                            ),
-                            child: Container(
-                              width: double.infinity,
-                              child: Center(
-                                child: Text(
-                                  'Verify',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 18.0,
+                              child: Container(
+                                width: double.infinity,
+                                child: Center(
+                                  child: Text(
+                                    'Verify',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 18.0,
+                                    ),
                                   ),
                                 ),
                               ),

@@ -459,6 +459,7 @@ class ReplaceFastagPageState extends State<ReplaceFastagPage> {
               ),
               menuItemStyleData: const MenuItemStyleData(
                 height: 40,
+                padding: EdgeInsets.all(7),
               ),
               dropdownSearchData: DropdownSearchData(
                 searchController: _resoncontroller,

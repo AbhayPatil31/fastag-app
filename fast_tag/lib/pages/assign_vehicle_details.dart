@@ -15,6 +15,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_masked_text2/flutter_masked_text2.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../api/network/create_json.dart';
@@ -26,6 +27,7 @@ import '../utility/snackbardesign.dart';
 
 final _vehiclenumbercontroller = TextEditingController();
 final _vehiclechassisnumbercontroller = TextEditingController();
+String? showfilename;
 //final _vehicleserialnumbercontroller = TextEditingController();
 final TextEditingController _vehicleserialnumbercontroller =
     TextEditingController();
@@ -41,10 +43,20 @@ String rcfrontimage = "", rcbackimage = "", vehicleimagestring = "";
 String rcfrontimageattachmentPath = "",
     rcbackimageattachmentPath = "",
     vehicleimageattachmentPath = "";
+String frontImageErrorMessage = "";
+String backImageErrorMessage = "";
+String vehicleImageErrorMessage = "";
 
 class AssignVehicleDetailsState extends State<AssignVehicleDetails> {
+  String? frontImagePath;
+  String? backImagePath;
+  String? vehicleImagePath;
+  // bool validatercbackimage = true;
+  // String errorforrcbackimage = "Please select an image";
+
   Future<void> uploadFile(File file, String filename, String filetype) async {
     print("File base name: " + filename);
+    showfilename = filename;
     try {
       final bytes = await File(file.path).readAsBytes();
       String base64String = base64Encode(bytes);
@@ -73,7 +85,7 @@ class AssignVehicleDetailsState extends State<AssignVehicleDetails> {
     }
   }
 
-  Future profile(BuildContext context, String imagetype) {
+  Future<void> profile(BuildContext context, String imagetype) async {
     return showDialog(
       barrierDismissible: true,
       context: context,
@@ -97,9 +109,10 @@ class AssignVehicleDetailsState extends State<AssignVehicleDetails> {
                     'Choose Source',
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                        color: Color(0xFF008357),
-                        fontSize: 20,
-                        fontWeight: FontWeight.w500),
+                      color: Color(0xFF008357),
+                      fontSize: 20,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
                 ),
                 Container(
@@ -114,38 +127,29 @@ class AssignVehicleDetailsState extends State<AssignVehicleDetails> {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.only(
-                    left: 30,
-                    top: 28,
-                    right: 30,
-                    bottom: 2,
-                  ),
+                  padding:
+                      EdgeInsets.only(left: 30, top: 28, right: 30, bottom: 2),
                   child: Row(
                     children: [
                       Expanded(
                         child: GestureDetector(
                           onTap: () async {
-                            // Close the dialog
                             Navigator.of(context).pop();
-                            // Capture an image from the camera
                             final XFile? image = await ImagePicker().pickImage(
                                 source: ImageSource.camera, imageQuality: 50);
                             if (image != null) {
-                              int filesize = File(image.path).lengthSync();
-                              double sizeInMb = filesize / (1024 * 1024);
-                              print("File Size: " + sizeInMb.toString());
-                              if (sizeInMb > 1) {
-                                SnackBarDesign(
-                                    'File size must be less than 1mb',
-                                    context,
-                                    colorfile().errormessagebcColor,
-                                    colorfile().errormessagetxColor);
-                              } else {
-                                String fileName = image.name;
-
-                                await uploadFile(
-                                    File(image.path), fileName, imagetype);
-                              }
+                              setState(() {
+                                if (imagetype == "rc_image_front") {
+                                  frontImagePath = image.path;
+                                } else if (imagetype == "rc_image_back") {
+                                  backImagePath = image.path;
+                                } else if (imagetype == "vehicle_image") {
+                                  vehicleImagePath = image.path;
+                                }
+                              });
+                              String fileName = image.name;
+                              await uploadFile(
+                                  File(image.path), fileName, imagetype);
                             }
                           },
                           child: Container(
@@ -168,9 +172,7 @@ class AssignVehicleDetailsState extends State<AssignVehicleDetails> {
                           ),
                         ),
                       ),
-                      SizedBox(
-                        width: 10,
-                      ),
+                      SizedBox(width: 10),
                       Expanded(
                         child: GestureDetector(
                           onTap: () async {
@@ -186,27 +188,24 @@ class AssignVehicleDetailsState extends State<AssignVehicleDetails> {
                                     ],
                                     compressionQuality: 50);
                             if (result != null) {
-                              int filesize =
-                                  File(result.files.single.path!).lengthSync();
-                              double sizeInMb = filesize / (1024 * 1024);
-                              print("File Size: " + sizeInMb.toString());
-                              if (sizeInMb > 1) {
-                                SnackBarDesign(
-                                    "File size must be less than 1mb",
-                                    context,
-                                    colorfile().errormessagebcColor,
-                                    colorfile().errormessagetxColor);
-                              } else {
-                                final ext =
-                                    result.files.first.name.split('.').last;
-                                String fileName = DateTime.now()
-                                        .millisecondsSinceEpoch
-                                        .toString() +
-                                    '.' +
-                                    ext;
-                                uploadFile(File(result.files.single.path!),
-                                    fileName, imagetype);
-                              }
+                              setState(() {
+                                if (imagetype == "rc_image_front") {
+                                  frontImagePath = result.files.single.path!;
+                                } else if (imagetype == "rc_image_back") {
+                                  backImagePath = result.files.single.path!;
+                                } else if (imagetype == "vehicle_image") {
+                                  vehicleImagePath = result.files.single.path!;
+                                }
+                              });
+                              final ext =
+                                  result.files.first.name.split('.').last;
+                              String fileName = DateTime.now()
+                                      .millisecondsSinceEpoch
+                                      .toString() +
+                                  '.' +
+                                  ext;
+                              await uploadFile(File(result.files.single.path!),
+                                  fileName, imagetype);
                             }
                           },
                           child: Container(
@@ -238,6 +237,36 @@ class AssignVehicleDetailsState extends State<AssignVehicleDetails> {
       },
     );
   }
+
+  // void showOverlay(BuildContext context, String message) {
+  //   OverlayEntry overlayEntry = OverlayEntry(
+  //     builder: (context) => Positioned(
+  //       top: MediaQuery.of(context).size.height * 0.5,
+  //       left: MediaQuery.of(context).size.width * 0.1,
+  //       right: MediaQuery.of(context).size.width * 0.1,
+  //       child: Material(
+  //         color: Colors.transparent,
+  //         child: Container(
+  //           padding: EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+  //           decoration: BoxDecoration(
+  //             color: Colors.black.withOpacity(0.7),
+  //             borderRadius: BorderRadius.circular(8.0),
+  //           ),
+  //           child: Text(
+  //             message,
+  //             style: TextStyle(color: Colors.white, fontSize: 14),
+  //             textAlign: TextAlign.center,
+  //           ),
+  //         ),
+  //       ),
+  //     ),
+  //   );
+
+  //   Overlay.of(context)?.insert(overlayEntry);
+  //   Future.delayed(Duration(seconds: 30), () {
+  //     overlayEntry.remove();
+  //   });
+  // }
 
 // succesPOpup
   void _showConfirmationDialog(BuildContext context) {
@@ -339,8 +368,12 @@ class AssignVehicleDetailsState extends State<AssignVehicleDetails> {
 
   @override
   void initState() {
+    frontImageErrorMessage = "";
+    backImageErrorMessage = "";
+    vehicleImageErrorMessage = "";
     // TODO: implement initState
     super.initState();
+
     _vehiclenumbercontroller.text = widget.vehiclenumber;
     Networkcallforwallettransactionhistory();
     Networkcallgetallbarcode();
@@ -440,13 +473,12 @@ class AssignVehicleDetailsState extends State<AssignVehicleDetails> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          'Vehicle Details',
-          style: TextStyle(
-            fontSize: 20, // 25px size
-            fontWeight: FontWeight.bold, // Bold text
-          ),
-        ),
+        title: Text('Vehicle Details',
+            style: GoogleFonts.inter(
+              fontWeight: FontWeight.w600,
+              color: Color(0xFF1D2024),
+              fontSize: 18,
+            )),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -461,9 +493,9 @@ class AssignVehicleDetailsState extends State<AssignVehicleDetails> {
                 children: [
                   Text(
                     'Vehicle Details',
-                    style: TextStyle(
-                      fontSize: 25,
-                      fontWeight: FontWeight.bold,
+                    style: GoogleFonts.inter(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w500,
                       color: Colors.black87,
                     ),
                   ),
@@ -485,9 +517,9 @@ class AssignVehicleDetailsState extends State<AssignVehicleDetails> {
                 children: [
                   Text(
                     'Enter Your Vehicle Details',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20, // Adjust the font size as needed
+                    style: GoogleFonts.inter(
+                      fontWeight: FontWeight.w500,
+                      fontSize: 16, // Adjust the font size as needed
                     ),
                   ),
                   SizedBox(height: 15),
@@ -919,8 +951,8 @@ class AssignVehicleDetailsState extends State<AssignVehicleDetails> {
               Container(
                 child: Text(
                   'Upload Vehicle RC Image',
-                  style: TextStyle(
-                    fontSize: 20,
+                  style: GoogleFonts.inter(
+                    fontSize: 16,
                     fontWeight: FontWeight.w400,
                     color: Color.fromARGB(255, 83, 83, 83),
                   ),
@@ -934,8 +966,8 @@ class AssignVehicleDetailsState extends State<AssignVehicleDetails> {
               Container(
                 child: Text(
                   'Please upload image, size less than 100KB',
-                  style: TextStyle(
-                    fontSize: 14,
+                  style: GoogleFonts.inter(
+                    fontSize: 12,
                     fontWeight: FontWeight.w400,
                     color: Colors.blue,
                   ),
@@ -950,111 +982,171 @@ class AssignVehicleDetailsState extends State<AssignVehicleDetails> {
                 children: [
                   GestureDetector(
                     onTap: () {
-                      profile(context,
-                          'rc_image_front'); // Call the profile function when tapped
+                      profile(context, 'rc_image_front');
                     },
-                    child: Container(
-                      width: 140,
-                      height:
-                          80, // Adjusted height to accommodate image and text
-                      padding: EdgeInsets.all(10.0), // Adjusted padding
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color: Colors.blue,
-                          style: BorderStyle.solid,
-                        ),
-
-                        borderRadius:
-                            BorderRadius.circular(5.0), // Adding border
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Image.asset(
-                            'images/upload-icon.png',
-                            height: 25, // Adjusted height for the image
-                            fit: BoxFit.contain, // Fit the image inside the box
-                          ),
-                          SizedBox(
-                              height:
-                                  10), // Adding space between image and text
-                          Text(
-                            'Front Side', // Adjusted text
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w400,
-                              color: Colors.blue,
+                    child: frontImagePath != null
+                        ? Container(
+                            width: 140,
+                            height: 80,
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: Colors
+                                    .blue, // Border color for the container
+                                width: 1.0,
+                                style: BorderStyle.solid,
+                              ),
+                              borderRadius: BorderRadius.circular(5.0),
+                            ),
+                            child: Image.file(
+                              File(frontImagePath!),
+                              width: 140,
+                              height: 80,
+                              fit: BoxFit.cover,
+                            ),
+                          )
+                        : Container(
+                            width: 140,
+                            height: 80,
+                            padding: EdgeInsets.all(10.0),
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: Colors.blue,
+                                width: 1.0,
+                                style: BorderStyle.solid,
+                              ),
+                              borderRadius: BorderRadius.circular(5.0),
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Image.asset(
+                                  'images/upload-icon.png',
+                                  height: 25,
+                                  fit: BoxFit.contain,
+                                ),
+                                // SizedBox(height: 10),
+                                // Text(
+                                //   'Front Side',
+                                //   textAlign: TextAlign.center,
+                                //   style: TextStyle(
+                                //     fontSize: 5,
+                                //     fontWeight: FontWeight.w400,
+                                //     color: errormessage!.isNotEmpty
+                                //         ? Colors.red
+                                //         : Colors.blue,
+                                //   ),
+                                // ),
+                              ],
                             ),
                           ),
-                        ],
-                      ),
-                    ),
                   ),
                   validatercfrontimage
                       ? Container()
                       : Text(
                           errorforrcfrontimage,
                           style: TextStyle(color: Colors.red, fontSize: 10),
-                        )
+                        ),
                 ],
               ),
-
-              SizedBox(height: 16), // Adding space between containers
+              const SizedBox(
+                height: 5,
+              ),
+              Text(
+                frontImageErrorMessage!.isNotEmpty
+                    ? frontImageErrorMessage!
+                    : 'Front Side',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w400,
+                  color: frontImageErrorMessage!.isNotEmpty
+                      ? Colors.red
+                      : Colors.blue,
+                ),
+              ),
               Column(
                 children: [
                   GestureDetector(
                     onTap: () {
-                      profile(context,
-                          "rc_image_back"); // Call the profile function when tapped
+                      profile(context, 'rc_image_back');
                     },
-                    child: Container(
-                      width: 140,
-                      height:
-                          80, // Adjusted height to accommodate image and text
-                      padding: EdgeInsets.all(10.0), // Adjusted padding
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color: Colors.blue,
-                          style: BorderStyle.solid,
-                        ),
-
-                        borderRadius:
-                            BorderRadius.circular(5.0), // Adding border
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Image.asset(
-                            'images/upload-icon.png',
-                            height: 25, // Adjusted height for the image
-                            fit: BoxFit.contain, // Fit the image inside the box
-                          ),
-                          SizedBox(
-                              height:
-                                  10), // Adding space between image and text
-                          Text(
-                            'Back Side', // Adjusted text
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w400,
-                              color: Colors.blue,
+                    child: backImagePath != null
+                        ? Container(
+                            width: 140,
+                            height: 80,
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: Colors.blue,
+                                width: 1.0,
+                                style: BorderStyle.solid,
+                              ),
+                              borderRadius: BorderRadius.circular(5.0),
+                            ),
+                            child: Image.file(
+                              File(backImagePath!),
+                              width: 140,
+                              height: 80,
+                              fit: BoxFit.cover,
+                            ),
+                          )
+                        : Container(
+                            width: 140,
+                            height: 80,
+                            padding: EdgeInsets.all(10.0),
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: Colors.blue,
+                                width: 1.0,
+                                style: BorderStyle.solid,
+                              ),
+                              borderRadius: BorderRadius.circular(5.0),
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Image.asset(
+                                  'images/upload-icon.png',
+                                  height: 25,
+                                  fit: BoxFit.contain,
+                                ),
+                                // SizedBox(height: 10),
+                                // Text(
+                                //   'Back Side',
+                                //   textAlign: TextAlign.center,
+                                //   style: TextStyle(
+                                //     fontSize: 9,
+                                //     fontWeight: FontWeight.w400,
+                                //     color: Colors.blue,
+                                //   ),
+                                // ),
+                              ],
                             ),
                           ),
-                        ],
-                      ),
-                    ),
                   ),
                   validatercbackimage
                       ? Container()
                       : Text(
                           errorforrcbackimage,
                           style: TextStyle(color: Colors.red, fontSize: 10),
-                        )
+                        ),
                 ],
               ),
             ],
+          ),
+          const SizedBox(
+            height: 5,
+          ),
+          Text(
+            backImageErrorMessage!.isNotEmpty
+                ? backImageErrorMessage!
+                : 'Back Side',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.w400,
+              color:
+                  backImageErrorMessage!.isNotEmpty ? Colors.red : Colors.blue,
+            ),
           ),
         ],
       ),
@@ -1086,8 +1178,8 @@ class AssignVehicleDetailsState extends State<AssignVehicleDetails> {
               Container(
                 child: Text(
                   'Upload Vehicle Image',
-                  style: TextStyle(
-                    fontSize: 20,
+                  style: GoogleFonts.inter(
+                    fontSize: 16,
                     fontWeight: FontWeight.w400,
                     color: Color.fromARGB(255, 83, 83, 83),
                   ),
@@ -1101,8 +1193,8 @@ class AssignVehicleDetailsState extends State<AssignVehicleDetails> {
               Container(
                 child: Text(
                   'Please upload image, size less than 100KB',
-                  style: TextStyle(
-                    fontSize: 14,
+                  style: GoogleFonts.inter(
+                    fontSize: 12,
                     fontWeight: FontWeight.w400,
                     color: Colors.blue,
                   ),
@@ -1116,50 +1208,81 @@ class AssignVehicleDetailsState extends State<AssignVehicleDetails> {
             children: [
               GestureDetector(
                 onTap: () {
-                  profile(context,
-                      "vehicle_image"); // Call the profile function when tapped
+                  profile(context, "vehicle_image");
                 },
-                child: Container(
-                  width: 140,
-                  height: 80, // Adjusted height to accommodate image and text
-                  padding: EdgeInsets.all(10.0), // Adjusted padding
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.blue,
-                      style: BorderStyle.solid,
-                    ),
-
-                    borderRadius: BorderRadius.circular(5.0), // Adding border
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Image.asset(
-                        'images/upload-icon.png',
-                        height: 25, // Adjusted height for the image
-                        fit: BoxFit.contain, // Fit the image inside the box
-                      ),
-                      SizedBox(
-                          height: 10), // Adding space between image and text
-                      Text(
-                        'Vehicle Image', // Adjusted text
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w400,
-                          color: Colors.blue,
+                child: vehicleImagePath != null
+                    ? Container(
+                        width: 140,
+                        height: 80,
+                        padding: EdgeInsets.all(10.0),
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: Colors.blue,
+                            width: 1.0,
+                            style: BorderStyle.solid,
+                          ),
+                          borderRadius: BorderRadius.circular(5.0),
+                        ),
+                        child: Image.file(
+                          File(vehicleImagePath!),
+                          width: 140,
+                          height: 80,
+                          fit: BoxFit.cover,
+                        ),
+                      )
+                    : Container(
+                        width: 140,
+                        height: 80,
+                        padding: EdgeInsets.all(10.0),
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: Colors.blue,
+                            style: BorderStyle.solid,
+                          ),
+                          borderRadius: BorderRadius.circular(5.0),
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Image.asset(
+                              'images/upload-icon.png',
+                              height: 25,
+                              fit: BoxFit.contain,
+                            ),
+                            // SizedBox(height: 10),
+                            // Text(
+                            //   'Vehicle Image',
+                            //   textAlign: TextAlign.center,
+                            //   style: TextStyle(
+                            //     fontSize: 14,
+                            //     fontWeight: FontWeight.w400,
+                            //     color: Colors.blue,
+                            //   ),
+                            // ),
+                          ],
                         ),
                       ),
-                    ],
-                  ),
-                ),
               ),
               validatevehicleimage
                   ? Container()
                   : Text(
                       errorforvehicleimage,
                       style: TextStyle(color: Colors.red, fontSize: 10),
-                    ) // Adding space between containers
+                    ),
+              const SizedBox(
+                height: 5,
+              ),
+              Text(
+                'Vehicle Image',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w400,
+                  color: vehicleImageErrorMessage!.isNotEmpty
+                      ? Colors.red
+                      : Colors.blue,
+                ),
+              ),
             ],
           ),
         ],

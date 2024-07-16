@@ -906,7 +906,7 @@ class _CarouselWithIndicatorState extends State<CarouselWithIndicator> {
               .toList(),
           carouselController: _controller,
           options: CarouselOptions(
-              autoPlay: true,
+              autoPlay: widget.bannerimageslist.length > 1,
               enlargeCenterPage: true,
               aspectRatio: 2.5,
               onPageChanged: (index, reason) {

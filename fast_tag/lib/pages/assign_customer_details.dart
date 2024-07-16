@@ -269,6 +269,13 @@ class CustomerDetailsPageState extends State<CustomerDetailsPage> {
           validatecustomername = true;
           setState(() {});
         },
+        inputFormatters: [
+          FilteringTextInputFormatter.allow(
+            RegExp(
+              r'[a-zA-Z]',
+            ),
+          ),
+        ],
         decoration: InputDecoration(
           hintText: 'Enter First Name*',
           border: OutlineInputBorder(),
@@ -303,6 +310,13 @@ class CustomerDetailsPageState extends State<CustomerDetailsPage> {
         ],
       ),
       child: TextField(
+        inputFormatters: [
+          FilteringTextInputFormatter.allow(
+            RegExp(
+              r'[a-zA-Z]',
+            ),
+          ),
+        ],
         controller: _lastnamecontroller,
         onChanged: (value) {
           validatecustomername = true;
@@ -341,10 +355,14 @@ class CustomerDetailsPageState extends State<CustomerDetailsPage> {
           ),
         ],
       ),
-      child: TextField(
+      child: TextFormField(
         controller: _dobcontroller,
         onChanged: (value) {
-          validatedob = true;
+          if (value.isNotEmpty) {
+            validatedob = true;
+          } else {
+            validatedob = false;
+          }
           setState(() {});
         },
         decoration: InputDecoration(
@@ -356,8 +374,7 @@ class CustomerDetailsPageState extends State<CustomerDetailsPage> {
             borderSide: BorderSide(color: Colors.blue),
           ),
           enabledBorder: OutlineInputBorder(
-            borderSide:
-                BorderSide(color: const Color.fromARGB(255, 252, 250, 250)!),
+            borderSide: BorderSide(color: Color.fromARGB(255, 252, 250, 250)),
           ),
           fillColor: Theme.of(context).scaffoldBackgroundColor,
           filled: true,
@@ -365,20 +382,22 @@ class CustomerDetailsPageState extends State<CustomerDetailsPage> {
           suffixIcon: GestureDetector(
             onTap: () async {
               DateTime? pickedDate = await showDatePicker(
-                  context: context,
-                  initialDate: DateTime.now(),
-                  firstDate: DateTime(1950),
-                  lastDate: DateTime.now());
+                context: context,
+                initialDate: DateTime.now(),
+                firstDate: DateTime(1950),
+                lastDate: DateTime.now(),
+              );
 
               if (pickedDate != null) {
                 String day = pickedDate.day.toString();
                 String month = pickedDate.month.toString();
                 String year = pickedDate.year.toString();
-                String date = day + '/' + month + '/' + year;
+                String date = '$day/$month/$year';
                 _dobcontroller.text = date;
-                setState(() {
-                  // expensedate = pickedDate;
-                });
+                setState(() {});
+
+                validatedob = true;
+                setState(() {});
               }
             },
             child: Icon(Icons.calendar_today),
@@ -576,47 +595,53 @@ class CustomerDetailsPageState extends State<CustomerDetailsPage> {
 
   Widget idnumberwidget() {
     return Container(
-      margin: EdgeInsets.only(bottom: 20),
-      decoration: BoxDecoration(
-        boxShadow: [
-          BoxShadow(
-            color: Color.fromARGB(255, 219, 213, 213).withOpacity(0.5),
-            spreadRadius: 3,
-            blurRadius: 5,
-            offset: Offset(0, 3),
-          ),
-        ],
-      ),
-      child: TextField(
-        controller: _idnumbercontroller,
-        textCapitalization:
-            TextCapitalization.characters, // Forces capitalization
-        inputFormatters: [
-          FilteringTextInputFormatter.allow(
-              RegExp(r'[A-Z0-9]')), // Allow only uppercase letters and digits
-        ],
-        onChanged: (value) {
-          validateidnumber = true;
-          setState(() {});
-        },
-        decoration: InputDecoration(
-          hintText: 'ID Proof Number*',
-          errorText: validateidnumber ? null : errorforidnumber,
-          errorStyle: TextStyle(color: Colors.red, fontSize: 10),
-          border: OutlineInputBorder(),
-          focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.blue),
-          ),
-          enabledBorder: OutlineInputBorder(
-            borderSide:
-                BorderSide(color: const Color.fromARGB(255, 252, 250, 250)!),
-          ),
-          fillColor: Theme.of(context).scaffoldBackgroundColor,
-          filled: true,
-          contentPadding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+        margin: EdgeInsets.only(bottom: 20),
+        decoration: BoxDecoration(
+          boxShadow: [
+            BoxShadow(
+              color: Color.fromARGB(255, 219, 213, 213).withOpacity(0.5),
+              spreadRadius: 3,
+              blurRadius: 5,
+              offset: Offset(0, 3),
+            ),
+          ],
         ),
-      ),
-    );
+        child: TextFormField(
+          controller: _idnumbercontroller,
+          textCapitalization:
+              TextCapitalization.characters, // Forces capitalization
+          inputFormatters: [
+            FilteringTextInputFormatter.allow(
+              RegExp(r'[A-Z0-9]'), // Allow only uppercase letters and digits
+            ),
+          ],
+          onChanged: (value) {
+            if (value.isEmpty || value.length < 6) {
+              validateidnumber = false;
+              errorforidnumber =
+                  'ID Proof Number must be at least 6 characters';
+            } else {
+              validateidnumber = true;
+            }
+            setState(() {});
+          },
+          decoration: InputDecoration(
+            hintText: 'ID Proof Number*',
+            errorText: validateidnumber ? null : errorforidnumber,
+            errorStyle: TextStyle(color: Colors.red, fontSize: 10),
+            border: OutlineInputBorder(),
+            focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.blue),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderSide:
+                  BorderSide(color: Color.fromARGB(255, 252, 250, 250)!),
+            ),
+            fillColor: Theme.of(context).scaffoldBackgroundColor,
+            filled: true,
+            contentPadding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+          ),
+        ));
   }
 
   Widget planselectwidget() {
@@ -647,29 +672,18 @@ class CustomerDetailsPageState extends State<CustomerDetailsPage> {
                         color: Theme.of(context).hintColor,
                       ),
                     ),
-
-                    items: [
-                      // const DropdownMenuItem(
-                      //     child: Text(
-                      //       "Select Plan",
-                      //       style: TextStyle(
-                      //           color: Color.fromARGB(255, 117, 117, 117),
-                      //           fontSize: 14,
-                      //           fontWeight: FontWeight.w500),
-                      //     ),
-                      //     value: ""),
-                      ...agentplan.map<DropdownMenuItem<String>>((e) {
-                        return DropdownMenuItem(
-                            child: Text(
-                              e.planName.toString(),
-                              style: TextStyle(
-                                  color: Colors.grey.shade600,
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500),
-                            ),
-                            value: e.id.toString());
-                      }).toList()
-                    ],
+                    items: agentplan.map<DropdownMenuItem<String>>((e) {
+                      return DropdownMenuItem(
+                        child: Text(
+                          e.planName.toString(),
+                          style: TextStyle(
+                              color: Colors.grey.shade600,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500),
+                        ),
+                        value: e.id.toString(),
+                      );
+                    }).toList(),
                     value: agentplanselectedValue,
                     onChanged: (value) {
                       setState(() {
@@ -720,7 +734,10 @@ class CustomerDetailsPageState extends State<CustomerDetailsPage> {
                         ),
                       ),
                       searchMatchFn: (item, searchValue) {
-                        return item.value.toString().contains(searchValue);
+                        return item.value
+                            .toString()
+                            .toLowerCase()
+                            .contains(searchValue.toLowerCase());
                       },
                     ),
                     //This to clear the search value when you close the menu
@@ -732,9 +749,7 @@ class CustomerDetailsPageState extends State<CustomerDetailsPage> {
                   ),
                 ),
               ),
-              SizedBox(
-                height: 5,
-              ),
+              SizedBox(height: 5),
               validateplan
                   ? Container()
                   : Text(

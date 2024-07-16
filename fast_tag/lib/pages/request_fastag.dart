@@ -42,9 +42,12 @@ class RequestFastagState extends State<RequestFastag> {
 
   Future<void> Networkcallforwallettransactionhistory() async {
     try {
-      List<Object?>? list = await NetworkCall().getMethod(
+      String jsonstring = createjson().createjsonforgetallbarcode(context);
+
+      List<Object?>? list = await NetworkCall().postMethod(
           URLS().fastag_category_request_api,
           URLS().fastag_category_request_api_url,
+          jsonstring,
           context);
       if (list != null) {
         List<Requestcategoryresponse> response = List.from(list!);
@@ -83,7 +86,7 @@ class RequestFastagState extends State<RequestFastag> {
       appBar: AppBar(
         title: Text('Request Fastag',
             style: GoogleFonts.inter(
-              fontWeight: FontWeight.w500,
+              fontWeight: FontWeight.w600,
               color: Color(0xFF1D2024),
               fontSize: 18,
             )),
@@ -268,6 +271,15 @@ class RequestFastagState extends State<RequestFastag> {
                     bottomLeft: Radius.circular(10.0),
                     bottomRight: Radius.circular(10.0),
                   ),
+                  gradient: LinearGradient(
+                    colors: [
+                      Color(0xFF08469D),
+                      Color(0xFF0056D0),
+                      Color(0xFF0C92DD),
+                    ],
+                    begin: Alignment.centerLeft,
+                    end: Alignment.centerRight,
+                  ),
                   color: Color(0xFF0056D0),
                 ),
                 child: GestureDetector(
@@ -276,16 +288,15 @@ class RequestFastagState extends State<RequestFastag> {
                     for (int i = 0; i < controllerfortext.length; i++) {
                       if (controllerfortext[i]!.value!.text.isNotEmpty) {
                         categorycall.Category abc = categorycall.Category(
-                            categoryId: requestcategory[i].id!,
-                            requested: controllerfortext[i]!.value!.text);
+                          categoryId: requestcategory[i].id!,
+                          requested: controllerfortext[i]!.value!.text,
+                        );
                         listofcategory.add(abc);
                       }
                     }
                     if (listofcategory.isNotEmpty) {
                       Networkcallforaddcategorydetails();
                     }
-
-                    // Navigate to the second page
                   },
                   child: Row(
                     children: [
@@ -296,7 +307,7 @@ class RequestFastagState extends State<RequestFastag> {
                           child: Center(
                             child: Text(
                               'Send Request',
-                              style: TextStyle(
+                              style: GoogleFonts.inter(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold,
                                 fontSize: 16,

@@ -91,12 +91,14 @@ class _FastTagRequestListPageState extends State<FastTagRequestListPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color.fromRGBO(255, 255, 255, 1),
-        title: Text('Fastag Request List',
-            style: GoogleFonts.inter(
-              fontWeight: FontWeight.w600,
-              color: Color(0xFF1D2024),
-              fontSize: 18,
-            )),
+        title: Text(
+          'Fastag Request List',
+          style: GoogleFonts.inter(
+            fontWeight: FontWeight.w600,
+            color: Color(0xFF1D2024),
+            fontSize: 18,
+          ),
+        ),
       ),
       body: fasttagrequestlist.isEmpty
           ? nodata
@@ -109,17 +111,18 @@ class _FastTagRequestListPageState extends State<FastTagRequestListPage> {
                       ),
                     ),
                     Text(
-                      ' No request found ',
+                      'No request found',
                       style: TextStyle(
-                          fontSize: 20,
-                          color: Colors.grey,
-                          fontWeight: FontWeight.w500),
+                        fontSize: 20,
+                        color: Colors.grey,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
                     const SizedBox(
                       height: 10,
                     ),
                     Text(
-                      "Looks like you haven't request fastag yet ",
+                      "Looks like you haven't requested fastag yet",
                       style: TextStyle(
                         fontSize: 16,
                         color: Colors.grey,
@@ -134,10 +137,9 @@ class _FastTagRequestListPageState extends State<FastTagRequestListPage> {
           : Padding(
               padding: const EdgeInsets.all(8.0),
               child: RefreshIndicator(
-                onRefresh: () {
-                  return Future.delayed(const Duration(seconds: 1), () {
-                    Networkcallforfasttagrequestlist(false);
-                  });
+                onRefresh: () async {
+                  await Networkcallforfasttagrequestlist(false);
+                  setState(() {}); // Refresh the UI after data is updated
                 },
                 child: ListView.builder(
                   shrinkWrap: true,
@@ -156,7 +158,6 @@ class _FastTagRequestListPageState extends State<FastTagRequestListPage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Row(
-                              // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
                                 Text(
                                   'Request No.: ${request.requestNumber}',
@@ -168,7 +169,6 @@ class _FastTagRequestListPageState extends State<FastTagRequestListPage> {
                                 ),
                               ],
                             ),
-                            // SizedBox(width: 90), // Adjust width as needed
                             Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
@@ -180,7 +180,7 @@ class _FastTagRequestListPageState extends State<FastTagRequestListPage> {
                                     color: Color(0xFF424752),
                                   ),
                                 ),
-                                SizedBox(width: 4), // Adjust width as needed
+                                SizedBox(width: 4),
                                 Text(
                                   '${request.requestStatus == "0" ? "Pending" : "Completed"}',
                                   style: TextStyle(
@@ -195,9 +195,7 @@ class _FastTagRequestListPageState extends State<FastTagRequestListPage> {
                                 ),
                               ],
                             ),
-
                             SizedBox(height: 20),
-                            // Example rows with numbers
                             Wrap(
                               spacing: 10,
                               runSpacing: 10,
@@ -205,7 +203,6 @@ class _FastTagRequestListPageState extends State<FastTagRequestListPage> {
                                   fasttagrequestlist[index].details),
                             ),
                             SizedBox(height: 20),
-                            // Conditional buttons based on status
                             if (request.requestStatus == '0')
                               _buildPendingButtons(request.id!,
                                   fasttagrequestlist[index].details!)
@@ -355,15 +352,26 @@ class _FastTagRequestListPageState extends State<FastTagRequestListPage> {
               borderRadius: BorderRadius.circular(8),
             ),
             margin: EdgeInsets.symmetric(horizontal: 4),
-            child: Center(
-              child: Text(
-                number.requested!,
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.white,
-                  fontWeight: FontWeight.w800,
+            child: Column(
+              children: [
+                Text(
+                  "Tag Class",
+                  style: GoogleFonts.inter(color: Colors.white),
                 ),
-              ),
+                const SizedBox(
+                  height: 9,
+                ),
+                Center(
+                  child: Text(
+                    number.requested!,
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.white,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                ),
+              ],
             ),
           );
         }).toList(),

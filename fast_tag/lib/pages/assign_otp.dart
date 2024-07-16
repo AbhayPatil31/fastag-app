@@ -27,6 +27,7 @@ class AssignOtpPage extends StatefulWidget {
 class _AssignOtpPageState extends State<AssignOtpPage> {
   List<TextEditingController> _controllers =
       List.generate(6, (index) => TextEditingController());
+  final List<FocusNode> _focusNodes = List.generate(6, (index) => FocusNode());
 
   int secondsRemaining = 40;
   bool enableResend = false;
@@ -50,6 +51,8 @@ class _AssignOtpPageState extends State<AssignOtpPage> {
   @override
   void dispose() {
     timer!.cancel();
+    _focusNodes.forEach((focusNode) => focusNode.dispose());
+
     super.dispose();
   }
 
@@ -59,6 +62,7 @@ class _AssignOtpPageState extends State<AssignOtpPage> {
       height: 45,
       child: TextField(
         controller: _controllers[index],
+        focusNode: _focusNodes[index],
         keyboardType: TextInputType.number,
         maxLength: 1,
         textAlign: TextAlign.center,
@@ -70,8 +74,23 @@ class _AssignOtpPageState extends State<AssignOtpPage> {
           border: OutlineInputBorder(),
         ),
         onChanged: (String value) {
+          if (value.length == 1) {
+            if (index < 5) {
+              _focusNodes[index].unfocus();
+              FocusScope.of(context).requestFocus(_focusNodes[index + 1]);
+            }
+          } else if (value.isEmpty) {
+            if (index > 0) {
+              _focusNodes[index].unfocus();
+              FocusScope.of(context).requestFocus(_focusNodes[index - 1]);
+            }
+          }
+        },
+        onSubmitted: (String value) {
           if (value.length == 1 && index < 5) {
-            FocusScope.of(context).nextFocus();
+            FocusScope.of(context).requestFocus(_focusNodes[index + 1]);
+          } else if (value.isEmpty && index > 0) {
+            FocusScope.of(context).requestFocus(_focusNodes[index - 1]);
           }
         },
       ),
@@ -133,7 +152,7 @@ class _AssignOtpPageState extends State<AssignOtpPage> {
                           TextSpan(
                             text: widget.mobilenumber.replaceRange(
                               0,
-                              widget.mobilenumber.length - 2,
+                              widget.mobilenumber.length - 4,
                               'X' * (widget.mobilenumber.length - 2),
                             ),
                             style: TextStyle(
@@ -334,7 +353,7 @@ class _AssignOtpPageState extends State<AssignOtpPage> {
             break;
           case "false":
             if (response[0].message ==
-                "Low wallet amount, please recharge to proceed") {
+                "Insufficient wallet balance. Please recharge to continue.") {
               SnackBarDesign(
                   response[0].message!,
                   context,

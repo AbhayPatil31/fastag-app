@@ -94,6 +94,17 @@ class _SignUpPageState extends State<SignUpPage> {
     _mobileController.clear();
   }
 
+  void _validateMobileNumber(String value) {
+    if (value.length > 10) {
+      validatemobilenumber = false;
+      errormessage = "Mobile number cannot be more than 10 digits";
+    } else {
+      validatemobilenumber = true;
+      errormessage = "";
+    }
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -139,13 +150,9 @@ class _SignUpPageState extends State<SignUpPage> {
                   controller: _mobileController,
                   keyboardType: TextInputType.phone,
                   inputFormatters: [
-                    FilteringTextInputFormatter.allow(RegExp("[0-9]"))
+                    FilteringTextInputFormatter.allow(RegExp("[0-9]")),
                   ],
-                  onChanged: (value) {
-                    validatemobilenumber = true;
-                    errormessage = "";
-                    setState(() {});
-                  },
+                  onChanged: _validateMobileNumber,
                   decoration: InputDecoration(
                     prefixIcon: Container(
                       margin: EdgeInsets.only(
@@ -177,7 +184,7 @@ class _SignUpPageState extends State<SignUpPage> {
                     enabledBorder: OutlineInputBorder(
                       borderSide: BorderSide(
                           color: const Color.fromARGB(
-                              255, 252, 250, 250)!), // Change border color
+                              255, 252, 250, 250)), // Change border color
                     ),
                     fillColor: Theme.of(context).scaffoldBackgroundColor,
                     filled: true,
@@ -209,7 +216,20 @@ class _SignUpPageState extends State<SignUpPage> {
               SizedBox(
                 width: double.infinity,
                 child: Container(
+                  height: 60,
                   margin: EdgeInsets.only(top: 50.0),
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        Color(0xFF08469D),
+                        Color(0xFF0056D0),
+                        Color(0xFF0C92DD),
+                      ],
+                      begin: Alignment.centerLeft,
+                      end: Alignment.centerRight,
+                    ),
+                    borderRadius: BorderRadius.circular(5.0),
+                  ),
                   child: ElevatedButton(
                     onPressed: () {
                       String mobileNumber = _mobileController.text;
@@ -230,26 +250,31 @@ class _SignUpPageState extends State<SignUpPage> {
                     },
                     style: ButtonStyle(
                       backgroundColor: MaterialStateProperty.all<Color>(
-                        Color(0xFF0056D0),
+                        Colors
+                            .transparent, // Set background to transparent to show gradient
+                      ),
+                      shadowColor: MaterialStateProperty.all<Color>(
+                        Colors.transparent, // No shadow color
                       ),
                       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                         RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(
-                              5.0), // Button corner radius 5px
+                          borderRadius: BorderRadius.circular(5.0),
                         ),
                       ),
                     ),
                     child: Container(
+                      alignment: Alignment.center,
+                      height: 60,
+                      margin: const EdgeInsets.all(10),
                       width:
                           double.infinity, // Make button width match its parent
-                      child: Center(
-                        child: Text(
-                          'Get OTP',
-                          style: TextStyle(
-                              color: Colors
-                                  .white, // Set text color to white for better contrast
-                              fontSize: 16.0,
-                              fontWeight: FontWeight.w500),
+                      child: Text(
+                        'Get OTP',
+                        style: TextStyle(
+                          color: Colors
+                              .white, // Set text color to white for better contrast
+                          fontSize: 16.0,
+                          fontWeight: FontWeight.w500,
                         ),
                       ),
                     ),

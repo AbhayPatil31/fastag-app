@@ -14,8 +14,8 @@ class URLS {
   String wallet_total_amount_api_url = baseUrl + "wallet_total_amount_api";
   String wallet_transaction_history_api_url =
       baseUrl + "wallet_transaction_history_api";
-  String fastag_category_request_api_url =Uri.parse(
-      baseUrl + "fastag_category_request_api").replace(queryParameters: {'agent_id': AppUtility.AgentId}).toString();
+  String fastag_category_request_api_url =
+      baseUrl + "fastag_category_request_api";
   String fastag_category_details_api_url =
       baseUrl + "fastag_category_details_api";
   String get_fastag_request_list_url = baseUrl + "get_fastag_request_list";
@@ -53,6 +53,7 @@ class URLS {
   String get_total_withdra_amount_url = baseUrl + "get_total_withdra_amount";
   String get_mapper_class_api_url = baseUrl + "get_mapper_class_api";//have to implement creatjson,networkcall,other is done
   String get_vehicle_class_api_url = baseUrl + "get_vehicle_class_api";
+  String get_razor_pay_detailsurl = baseUrl+"get_razor_pay_details";
   final int agent_login_api = 1;
   final int profile_details_api = 2;
   final int help_type_master_api = 3;
@@ -94,5 +95,6 @@ class URLS {
   final int get_total_withdra_amount = 39;
   final int get_mapper_class_api = 40;
   final int get_vehicle_class_api = 41;
+  final int get_razor_pay_detailsapi = 42;
   //get list
 }

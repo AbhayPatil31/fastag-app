@@ -400,9 +400,11 @@ class AssignVehicleDetailsState extends State<AssignVehicleDetails> {
   Future<void> Networkcallforwallettransactionhistory() async {
     try {
       ProgressDialog.showProgressDialog(context, "title");
-      List<Object?>? list = await NetworkCall().getMethod(
+      String jsonstring = createjson().createjsonforgetallbarcode(context);
+      List<Object?>? list = await NetworkCall().postMethod(
           URLS().fastag_category_request_api,
           URLS().fastag_category_request_api_url,
+          jsonstring,
           context);
       if (list != null) {
         Navigator.pop(context);
@@ -555,31 +557,45 @@ class AssignVehicleDetailsState extends State<AssignVehicleDetails> {
 
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 30.0),
-              child: ElevatedButton(
-                onPressed: () {
-                  //_showConfirmationDialog(context);
-                  validatefields();
-                },
-                style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all<Color>(
-                    Color(0xFF0056D0),
+              child: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      Color(0xFF08469D),
+                      Color(0xFF0056D0),
+                      Color(0xFF0C92DD),
+                    ],
+                    begin: Alignment.centerLeft,
+                    end: Alignment.centerRight,
                   ),
-                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                    RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(
-                          5.0), // Button corner radius 5px
+                  borderRadius: BorderRadius.circular(5.0),
+                ),
+                child: ElevatedButton(
+                  onPressed: () {
+                    //_showConfirmationDialog(context);
+                    validatefields();
+                  },
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all<Color>(
+                      Colors
+                          .transparent, // Set background to transparent to show gradient
+                    ),
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5.0),
+                      ),
                     ),
                   ),
-                ),
-                child: Container(
-                  height: 50,
-                  child: Center(
-                    child: Text(
-                      'Done',
-                      style: TextStyle(
-                        color: Colors
-                            .white, // Set text color to white for better contrast
-                        fontSize: 18.0,
+                  child: Container(
+                    height: 60,
+                    width: double.infinity,
+                    child: Center(
+                      child: Text(
+                        'Done',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 18.0,
+                        ),
                       ),
                     ),
                   ),

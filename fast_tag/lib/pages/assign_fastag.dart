@@ -12,18 +12,23 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-final vehiclecontroller = TextEditingController();
-final mobilecontroller = TextEditingController();
-
 class AssignFastagPage extends StatefulWidget {
   State createState() => AssignFastagPageState();
 }
 
 class AssignFastagPageState extends State<AssignFastagPage> {
+  final vehiclecontroller = TextEditingController();
+  final mobilecontroller = TextEditingController();
+  FocusNode focusNode = FocusNode();
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    mobilecontroller.addListener(() {
+      if (mobilecontroller.text.length > 10) {
+        focusNode.unfocus();
+      }
+    });
   }
 
   @override
@@ -36,6 +41,7 @@ class AssignFastagPageState extends State<AssignFastagPage> {
     errorforvehicle = "";
     vehiclecontroller.clear();
     mobilecontroller.clear();
+    focusNode.dispose();
   }
 
   @override
@@ -120,26 +126,25 @@ class AssignFastagPageState extends State<AssignFastagPage> {
                 ),
                 child: TextField(
                   controller: mobilecontroller,
+                  focusNode:
+                      focusNode, // Associate the focus node with the TextField
                   inputFormatters: [
                     FilteringTextInputFormatter.digitsOnly,
                     LengthLimitingTextInputFormatter(10),
                   ],
                   keyboardType: TextInputType.number,
-                  // maxLength: 10,
                   decoration: InputDecoration(
                     hintText: 'Enter Mobile Number*',
-                    errorText: validatemobilenumber ? null : errorformobile,
-                    errorStyle: TextStyle(color: Colors.red, fontSize: 10),
                     border: OutlineInputBorder(),
                     focusedBorder: OutlineInputBorder(
                       borderSide: BorderSide(color: Colors.blue),
                     ),
                     enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                          color: const Color.fromARGB(255, 252, 250, 250)!),
+                      borderSide:
+                          BorderSide(color: Color.fromARGB(255, 252, 250, 250)),
                     ),
-                    fillColor: Theme.of(context).scaffoldBackgroundColor,
                     filled: true,
+                    fillColor: Theme.of(context).scaffoldBackgroundColor,
                     contentPadding:
                         EdgeInsets.symmetric(vertical: 15, horizontal: 20),
                   ),

@@ -12,6 +12,8 @@ import 'package:razorpay_flutter/razorpay_flutter.dart';
 import '../api/network/create_json.dart';
 import '../api/network/network.dart';
 import '../api/network/uri.dart';
+import '../api/response/getrazorpaydetailsapiresponse.dart';
+import '../api/response/getvehicleclassresponse.dart';
 import '../api/response/paymentresponse.dart';
 import '../api/response/wallettotalamountresponse.dart';
 import '../utility/colorfile.dart';
@@ -34,6 +36,7 @@ class RechargePageState extends State<RechargePage> {
     // TODO: implement initState
     super.initState();
     Networkcallforwalletamount();
+    Networkcallforgetvehicleclass();
   }
 
   @override
@@ -61,6 +64,40 @@ class RechargePageState extends State<RechargePage> {
         switch (status) {
           case "true":
             wallenttotalamount = response[0].data!;
+            setState(() {});
+            break;
+          case "false":
+            SnackBarDesign(
+                response[0].message!,
+                context,
+                colorfile().errormessagebcColor,
+                colorfile().errormessagetxColor);
+            break;
+        }
+      } else {
+        SomethingWentWrongSnackBarDesign(context);
+      }
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  String keyid = "";
+  List<GetrazorpaydetailsapiresponseData> datalist = [];
+
+  Future<void> Networkcallforgetvehicleclass() async {
+    try {
+      List<Object?>? list = await NetworkCall().getMethod(
+          URLS().get_razor_pay_detailsapi,
+          URLS().get_razor_pay_detailsurl,
+          context);
+      if (list != null) {
+        List<Getrazorpaydetailsapiresponse> response = List.from(list!);
+        String status = response[0].status!;
+        switch (status) {
+          case "true":
+            GetrazorpaydetailsapiresponseData obj = response[0]!.data!;
+            keyid = obj.razorPayKey!;
             setState(() {});
             break;
           case "false":
@@ -191,7 +228,7 @@ class RechargePageState extends State<RechargePage> {
   rechargenow() async {
     Razorpay razorpay = Razorpay();
     var options = {
-      'key': 'rzp_test_GA1PYehm4iMiCa',
+      'key': keyid,
       'amount': double.parse(_amountcontroller.text) * 100,
       'name': 'Shaurya Softrack',
       'description': '',

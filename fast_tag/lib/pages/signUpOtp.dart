@@ -6,6 +6,7 @@ import 'package:fast_tag/utility/apputility.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -32,10 +33,12 @@ class _SignUpOtpPageState extends State<SignUpOtpPage> {
 
   int secondsRemaining = 40;
   bool enableResend = false;
+  List<FocusNode>? _focusNodes;
   Timer? timer;
   @override
   void initState() {
     super.initState();
+    _focusNodes = List.generate(6, (_) => FocusNode());
     timer = Timer.periodic(Duration(seconds: 1), (_) {
       if (secondsRemaining != 0) {
         setState(() {
@@ -52,6 +55,7 @@ class _SignUpOtpPageState extends State<SignUpOtpPage> {
   @override
   void dispose() {
     timer!.cancel();
+    _focusNodes!.forEach((focusNode) => focusNode.dispose());
     super.dispose();
   }
 
@@ -138,6 +142,7 @@ class _SignUpOtpPageState extends State<SignUpOtpPage> {
       height: 45,
       child: TextField(
         controller: _controllers[index],
+        focusNode: _focusNodes![index],
         keyboardType: TextInputType.number,
         maxLength: 1,
         textAlign: TextAlign.center,
@@ -147,9 +152,33 @@ class _SignUpOtpPageState extends State<SignUpOtpPage> {
         ),
         onChanged: (String value) {
           if (value.length == 1 && index < 5) {
-            FocusScope.of(context).nextFocus();
+            FocusScope.of(context).requestFocus(_focusNodes![index + 1]);
+          } else if (value.isEmpty && index > 0) {
+            FocusScope.of(context).requestFocus(_focusNodes![index - 1]);
           }
         },
+        onSubmitted: (_) {
+          if (_controllers[index].text.isEmpty && index > 0) {
+            FocusScope.of(context).requestFocus(_focusNodes![index - 1]);
+          }
+        },
+        onEditingComplete: () {
+          if (_controllers[index].text.isEmpty && index > 0) {
+            FocusScope.of(context).requestFocus(_focusNodes![index - 1]);
+          }
+        },
+        inputFormatters: [
+          LengthLimitingTextInputFormatter(1),
+          FilteringTextInputFormatter.digitsOnly,
+          TextInputFormatter.withFunction((oldValue, newValue) {
+            if (newValue.text.isEmpty) {
+              if (index > 0) {
+                FocusScope.of(context).requestFocus(_focusNodes![index - 1]);
+              }
+            }
+            return newValue;
+          }),
+        ],
       ),
     );
   }
@@ -168,9 +197,9 @@ class _SignUpOtpPageState extends State<SignUpOtpPage> {
               children: [
                 Text(
                   'Verify phone',
-                  style: TextStyle(
-                    fontWeight: FontWeight.w700,
-                    fontSize: 28,
+                  style: GoogleFonts.inter(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 22,
                   ),
                 ),
                 SizedBox(height: 5),
@@ -186,16 +215,16 @@ class _SignUpOtpPageState extends State<SignUpOtpPage> {
                     text: TextSpan(
                       text:
                           'Please enter the 4 digit security code we just sent you at ',
-                      style: TextStyle(
+                      style: GoogleFonts.inter(
                         color: Color(0xff3B4453),
                         fontWeight: FontWeight.w400,
-                        fontSize: 14,
+                        fontSize: 12,
                       ),
                       children: <TextSpan>[
                         TextSpan(
                           text: widget.mobilenumber.replaceRange(
                             0,
-                            widget.mobilenumber.length - 2,
+                            widget.mobilenumber.length - 4,
                             'X' * (widget.mobilenumber.length - 2),
                           ),
                           style: TextStyle(
@@ -218,12 +247,17 @@ class _SignUpOtpPageState extends State<SignUpOtpPage> {
                 ),
                 enableResend
                     ? SizedBox(
+                        height: 60,
                         width: double.infinity,
                         child: ElevatedButton(
                           onPressed: () {},
                           style: ButtonStyle(
                             backgroundColor: MaterialStateProperty.all<Color>(
-                              Color(0xFF0056D0).withOpacity(0.4),
+                              Colors
+                                  .transparent, // Set background to transparent to show gradient
+                            ),
+                            shadowColor: MaterialStateProperty.all<Color>(
+                              Colors.transparent, // No shadow color
                             ),
                             shape: MaterialStateProperty.all<
                                 RoundedRectangleBorder>(
@@ -231,8 +265,24 @@ class _SignUpOtpPageState extends State<SignUpOtpPage> {
                                 borderRadius: BorderRadius.circular(5.0),
                               ),
                             ),
+                            padding:
+                                MaterialStateProperty.all<EdgeInsetsGeometry>(
+                                    EdgeInsets.zero), // Remove padding
                           ),
                           child: Container(
+                            height: 60,
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                colors: [
+                                  Color(0xFF08469D),
+                                  Color(0xFF0056D0),
+                                  Color(0xFF0C92DD),
+                                ],
+                                begin: Alignment.centerLeft,
+                                end: Alignment.centerRight,
+                              ),
+                              borderRadius: BorderRadius.circular(5.0),
+                            ),
                             width: double.infinity,
                             child: Center(
                               child: Text(
@@ -247,6 +297,7 @@ class _SignUpOtpPageState extends State<SignUpOtpPage> {
                         ),
                       )
                     : SizedBox(
+                        height: 60,
                         width: double.infinity,
                         child: ElevatedButton(
                           onPressed: () {
@@ -262,7 +313,11 @@ class _SignUpOtpPageState extends State<SignUpOtpPage> {
                           },
                           style: ButtonStyle(
                             backgroundColor: MaterialStateProperty.all<Color>(
-                              Color(0xFF0056D0),
+                              Colors
+                                  .transparent, // Set background to transparent to show gradient
+                            ),
+                            shadowColor: MaterialStateProperty.all<Color>(
+                              Colors.transparent, // No shadow color
                             ),
                             shape: MaterialStateProperty.all<
                                 RoundedRectangleBorder>(
@@ -270,8 +325,24 @@ class _SignUpOtpPageState extends State<SignUpOtpPage> {
                                 borderRadius: BorderRadius.circular(5.0),
                               ),
                             ),
+                            padding:
+                                MaterialStateProperty.all<EdgeInsetsGeometry>(
+                                    EdgeInsets.zero), // Remove padding
                           ),
                           child: Container(
+                            height: 60,
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                colors: [
+                                  Color(0xFF08469D),
+                                  Color(0xFF0056D0),
+                                  Color(0xFF0C92DD),
+                                ],
+                                begin: Alignment.centerLeft,
+                                end: Alignment.centerRight,
+                              ),
+                              borderRadius: BorderRadius.circular(5.0),
+                            ),
                             width: double.infinity,
                             child: Center(
                               child: Text(

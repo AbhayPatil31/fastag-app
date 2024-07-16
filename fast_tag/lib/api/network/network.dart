@@ -47,18 +47,18 @@ import '../response/TicketdetailsListresponse.dart';
 import '../response/Ticketdetailsresponse.dart';
 import '../response/Ticketlistresponse.dart';
 import '../response/Ticketraiseresponse.dart';
+import '../response/getrazorpaydetailsapiresponse.dart';
 
 class NetworkCall {
   Future<List<Object?>?> postMethod(
       int requestCode, String url, String body, BuildContext context) async {
-        log("Request Code : $requestCode");
-        log("body : $body");
-        log("URL : $url");
+    log("Request Code : $requestCode");
+    log("body : $body");
+    log("URL : $url");
     var response = await http.post(Uri.parse(url), body: body);
     // var data = response.body;
     try {
       if (response.statusCode == 200) {
-      
         String ResponseString = response.body;
 
         String str = "[" + ResponseString + "]";
@@ -99,8 +99,9 @@ class NetworkCall {
             final wallettransactionhistory =
                 wallettransactionhistoryresponseFromJson(str);
             return wallettransactionhistory;
-          case 12: //Get Method
-            break;
+          case 12:
+            final requestcategory = requestcategoryresponseFromJson(str);
+            return requestcategory;
           case 13:
             final categorydetails = categorydetailsresponseFromJson(str);
             return categorydetails;
@@ -183,8 +184,9 @@ class NetworkCall {
           case 39:
             final total = totalwithdrawamountresponseFromJson(str);
             return total;
-          case 40://this is 8-7-24 work,have to add id to otherlist.
-            final mapperclass = getmapperclassresponseFromJson(str);//this is 8-7-24 work,have to add id to otherlist.
+          case 40: //this is 8-7-24 work,have to add id to otherlist.
+            final mapperclass = getmapperclassresponseFromJson(
+                str); //this is 8-7-24 work,have to add id to otherlist.
             return mapperclass;
         }
       } else if (response.statusCode == 400) {
@@ -206,9 +208,11 @@ class NetworkCall {
 
   Future<List<Object?>?> getMethod(
       int requestCode, String url, BuildContext context) async {
-    var response = await http.get(Uri.parse(url),);
+    var response = await http.get(
+      Uri.parse(url),
+    );
     log("url : $url");
-    
+
     try {
       if (response.statusCode == 200) {
         String ResponseString = response.body;
@@ -219,15 +223,17 @@ class NetworkCall {
           case 3:
             final helplist = helpresponseFromJson(str);
             return helplist;
-          case 12:
-            final requestcategory = requestcategoryresponseFromJson(str);
-            return requestcategory;
+
           case 36:
             final banner = bannerresponseFromJson(str);
             return banner;
           case 41:
             final Getvehicleclassresponse =
                 getvehicleclassresponseFromJson(str);
+            return Getvehicleclassresponse;
+            case 42:
+            final Getvehicleclassresponse =
+                getrazorpaydetailsapiresponseFromJson(str);
             return Getvehicleclassresponse;
 
           default:

@@ -29,6 +29,19 @@ class AssignFastagPageState extends State<AssignFastagPage> {
         focusNode.unfocus();
       }
     });
+    mobilecontroller!.addListener(_validateMobileNumber!);
+  }
+
+  void _validateMobileNumber() {
+    setState(() {
+      if (mobilecontroller.text.length != 10) {
+        validatemobilenumber = false;
+        errorformobile = "Please enter a valid 10-digit mobile number";
+      } else {
+        validatemobilenumber = true;
+        errorformobile = '';
+      }
+    });
   }
 
   @override
@@ -41,6 +54,8 @@ class AssignFastagPageState extends State<AssignFastagPage> {
     errorforvehicle = "";
     vehiclecontroller.clear();
     mobilecontroller.clear();
+    mobilecontroller!.removeListener(_validateMobileNumber!);
+
     focusNode.dispose();
   }
 
@@ -114,42 +129,41 @@ class AssignFastagPageState extends State<AssignFastagPage> {
               ),
               SizedBox(height: 20),
               Container(
-                decoration: BoxDecoration(
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.5),
-                      spreadRadius: 1,
-                      blurRadius: 10,
-                      offset: Offset(0, 5), // Offset in x and y directions
-                    ),
-                  ],
-                ),
-                child: TextField(
-                  controller: mobilecontroller,
-                  focusNode:
-                      focusNode, // Associate the focus node with the TextField
-                  inputFormatters: [
-                    FilteringTextInputFormatter.digitsOnly,
-                    LengthLimitingTextInputFormatter(10),
-                  ],
-                  keyboardType: TextInputType.number,
-                  decoration: InputDecoration(
-                    hintText: 'Enter Mobile Number*',
-                    border: OutlineInputBorder(),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.blue),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide:
-                          BorderSide(color: Color.fromARGB(255, 252, 250, 250)),
-                    ),
-                    filled: true,
-                    fillColor: Theme.of(context).scaffoldBackgroundColor,
-                    contentPadding:
-                        EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+                  decoration: BoxDecoration(
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.5),
+                        spreadRadius: 1,
+                        blurRadius: 10,
+                        offset: Offset(0, 5), // Offset in x and y directions
+                      ),
+                    ],
                   ),
-                ),
-              ),
+                  child: TextField(
+                    controller: mobilecontroller,
+                    focusNode: focusNode,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.digitsOnly,
+                      LengthLimitingTextInputFormatter(10),
+                    ],
+                    keyboardType: TextInputType.number,
+                    decoration: InputDecoration(
+                      hintText: 'Enter Mobile Number*',
+                      border: OutlineInputBorder(),
+                      errorText: validatemobilenumber ? null : errorformobile,
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.blue),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                            color: Color.fromARGB(255, 252, 250, 250)),
+                      ),
+                      filled: true,
+                      fillColor: Theme.of(context).scaffoldBackgroundColor,
+                      contentPadding:
+                          EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+                    ),
+                  )),
 
               SizedBox(height: 30), // Adding space before the button
               SizedBox(
@@ -210,7 +224,7 @@ class AssignFastagPageState extends State<AssignFastagPage> {
 
   bool validatevehicle = true, validatemobilenumber = true;
   String errorforvehicle = "Please enter vehicle number",
-      errorformobile = "Please enter mobile number";
+      errorformobile = "Please enter a valid 10-digit mobile number";
   String? validatefield() {
     validatevehicle = true;
     validatemobilenumber = true;
@@ -218,7 +232,7 @@ class AssignFastagPageState extends State<AssignFastagPage> {
       validatevehicle = false;
       validatemobilenumber = false;
       errorforvehicle = "Please enter vehicle number";
-      errorformobile = "Please enter mobile number";
+      errorformobile = "Please enter a valid 10-digit mobile number";
       setState(() {});
       return 'abc';
     } else if (vehiclecontroller.text.isEmpty) {
@@ -233,12 +247,12 @@ class AssignFastagPageState extends State<AssignFastagPage> {
       return 'abc';
     } else if (mobilecontroller.text.isEmpty) {
       validatemobilenumber = false;
-      errorformobile = "Please enter mobile number";
+      errorformobile = "Please enter a valid 10-digit mobile number";
       setState(() {});
       return 'abc';
     } else if (mobilecontroller.text.isPhoneNumber == false) {
       validatemobilenumber = false;
-      errorformobile = "Please enter valid mobile number";
+      errorformobile = "Please enter a valid 10-digit mobile number";
       setState(() {});
       return 'abc';
     } else {

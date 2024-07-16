@@ -134,7 +134,7 @@ class _AssignOtpPageState extends State<AssignOtpPage> {
                       style: GoogleFonts.inter(
                         fontWeight: FontWeight.w500,
                         color: Color(0xFF1D2024),
-                        fontSize: 18,
+                        fontSize: 16,
                       )),
                   SizedBox(height: 5),
                   Container(
@@ -146,7 +146,7 @@ class _AssignOtpPageState extends State<AssignOtpPage> {
                         style: TextStyle(
                           color: Color(0xffA1A8B0),
                           fontWeight: FontWeight.w400,
-                          fontSize: 16,
+                          fontSize: 14,
                         ),
                         children: <TextSpan>[
                           TextSpan(

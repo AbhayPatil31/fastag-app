@@ -220,7 +220,7 @@ class StockCategoryListState extends State<StockCategoryList> {
                                                   padding:
                                                       const EdgeInsets.all(4.0),
                                                   child: Text(
-                                                    '${stockcategory[index].tagId} ',
+                                                    '${stockcategory[index].barcode} ',
                                                     style: TextStyle(
                                                       fontSize: 15,
                                                       fontWeight:

@@ -121,7 +121,7 @@ class RechargePageState extends State<RechargePage> {
     return Scaffold(
       extendBodyBehindAppBar: true, // Extend the body behind the app bar
       appBar: AppBar(
-        title: Text('Recharge/ Refill',
+        title: Text('Recharge Now',
             style: GoogleFonts.inter(
               fontWeight: FontWeight.w600,
               color: Color(0xFF1D2024),
@@ -298,8 +298,11 @@ class RechargePageState extends State<RechargePage> {
   }
 
   void handlePaymentErrorResponse(PaymentFailureResponse response) {
-    showAlertDialog(context, "Payment Failed",
-        "Code: ${response.code}\nDescription: ${response.message}\nMetadata:${response.error.toString()}");
+    showAlertDialog(
+        context,
+        "Sorry Payment has been Failed, Please try again!",
+        // "Code: ${response.code}\nDescription: ${response.message}\nMetadata:${response.error.toString()}"
+        "");
   }
 
   void handlePaymentSuccessResponse(PaymentSuccessResponse response) {

@@ -42,10 +42,10 @@ class Issusancereportcounterboxresponse {
 }
 
 class IssuanceCount {
-  int? assignFastag;
-  int? approvedFastag;
+  String? assignFastag;
+  String? approvedFastag;
   String? requestedFastag;
-  int? recharge;
+  String? recharge;
 
   IssuanceCount({
     this.assignFastag,

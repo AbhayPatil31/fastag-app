@@ -147,6 +147,38 @@ class _TicketsListPageState extends State<TicketsListPage> {
                           height: 400,
                         ),
                       ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: TextButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => RaiseTicketsPage(),
+                              ),
+                            ).then((value) {
+                              fetchTicketsData(true);
+                            });
+                          },
+                          style: TextButton.styleFrom(
+                            backgroundColor: Colors.blue,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                          ),
+                          child: Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 15.0),
+                            child: Text(
+                              'Raise Ticket',
+                              style: TextStyle(
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+
                       //below code is commented due to double button is present on the same screen which is an functional issue
                       // SizedBox(
                       //   width: 180.0,

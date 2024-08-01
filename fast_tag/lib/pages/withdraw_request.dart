@@ -79,7 +79,7 @@ class _WithdrawPageState extends State<WithdrawPage> {
     return Scaffold(
       extendBodyBehindAppBar: true, // Extend the body behind the app bar
       appBar: AppBar(
-        title: Text('Recharge/ Refill'),
+        title: Text('Withdrawal'),
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),

@@ -152,8 +152,12 @@ class AmountdialogState extends State<Amountdialog> {
   }
 
   void handlePaymentErrorResponse(PaymentFailureResponse response) {
-    showAlertDialog(context, "Payment Failed",
-        "Code: ${response.code}\nDescription: ${response.message}\nMetadata:${response.error.toString()}");
+    showAlertDialog(
+        context, "Sorry Payment has been Failed, Please try again!", ""
+        // "Code: ${response.code}\nDescription: ${response.message}\nMetadata:${response.error.toString()
+
+        // }"
+        );
   }
 
   void handlePaymentSuccessResponse(PaymentSuccessResponse response) {

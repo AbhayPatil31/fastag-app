@@ -388,7 +388,8 @@ class _RaiseTicketsPageState extends State<RaiseTicketsPage> {
 
                       // Validate form and add reply only if validation passes
                       if (_formKey.currentState!.validate()) {
-                        if (selectedHelpTypeId != null) {
+                        if (selectedHelpTypeId != null ||
+                            description.isNotEmpty) {
                           addTickit(id, description, selectedHelpTypeId!);
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(

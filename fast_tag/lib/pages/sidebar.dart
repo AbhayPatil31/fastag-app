@@ -13,6 +13,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'request_list.dart';
+import 'tickets_list.dart';
 
 class SideBar extends StatefulWidget {
   const SideBar({Key? key});
@@ -116,7 +117,7 @@ class _SideBarState extends State<SideBar> {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => HelpPage()),
+                  MaterialPageRoute(builder: (context) => TicketsListPage()),
                 );
               },
             ),
@@ -319,5 +320,4 @@ class _SideBarState extends State<SideBar> {
       },
     );
   }
-
 }

@@ -2,6 +2,7 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:fast_tag/api/response/replacevehicleresponse.dart';
 import 'package:fast_tag/pages/assign_otp.dart';
 import 'package:fast_tag/pages/replace_otp.dart';
+import 'package:fast_tag/pages/withdraw_request.dart';
 import 'package:fast_tag/utility/progressdialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -192,6 +193,24 @@ class ReplaceFastagPageState extends State<ReplaceFastagPage> {
     );
   }
 
+  void _validateInput(String value) {
+    if (value.length == 10) {
+      setState(() {
+        validatecustomername = true;
+
+        errormessage = '';
+      });
+    } else if (value.length > 10) {
+      setState(() {
+        errormessage = 'Input cannot be more than 10 digits';
+      });
+    } else {
+      setState(() {
+        errormessage = 'Input must be exactly 10 digits';
+      });
+    }
+  }
+
   Widget customername() {
     return Container(
       decoration: BoxDecoration(
@@ -208,11 +227,14 @@ class ReplaceFastagPageState extends State<ReplaceFastagPage> {
       child: TextField(
         controller: _customernamecontroller,
         onChanged: (value) {
-          validatecustomername = true;
+          _validateInput(value);
           setState(() {});
         },
         keyboardType: TextInputType.number,
-        inputFormatters: [FilteringTextInputFormatter.allow(RegExp("[0-9]"))],
+        inputFormatters: [
+          FilteringTextInputFormatter.allow(RegExp("[0-9]")),
+          LengthLimitingTextInputFormatter(10),
+        ],
         decoration: InputDecoration(
           hintText: 'Enter Mobile Number*',
           errorText: validatecustomername ? null : errorforcutomername,
@@ -222,6 +244,7 @@ class ReplaceFastagPageState extends State<ReplaceFastagPage> {
             borderSide:
                 BorderSide(color: Colors.blue), // Change border color on focus
           ),
+
           enabledBorder: OutlineInputBorder(
             borderSide: BorderSide(
                 color: const Color.fromARGB(
@@ -537,8 +560,8 @@ class ReplaceFastagPageState extends State<ReplaceFastagPage> {
     validatebarcode = true;
     validatereson = true;
     if (_customernamecontroller.text.isEmpty &&
-        _vehiclenumbercontroller.text.isEmpty &&
-        vehiclebarcodeselectedvalue == null &&
+            _vehiclenumbercontroller.text.isEmpty &&
+            vehiclebarcodeselectedvalue == null ||
         idselectedValue == null) {
       validatecustomername = false;
       validatevehicle = false;

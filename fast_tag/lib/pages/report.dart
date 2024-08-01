@@ -51,10 +51,10 @@ class _ReportPageState extends State<ReportPage> {
           case "true":
             countlist = response[0].data!;
             if (countlist != null) {
-              assignfastag = countlist!.assignFastag!;
-              approvedfastag = countlist!.approvedFastag!;
-              requestfastag = int.parse(countlist!.requestedFastag!);
-              refill = countlist!.recharge!;
+              assignfastag = int.parse(countlist!.assignFastag!);
+              approvedfastag = int.parse(countlist!.approvedFastag!);
+              requestfastag = int.parse(countlist!.requestedFastag!)!;
+              refill = int.parse(countlist!.recharge!);
             }
             setState(() {});
             break;
@@ -192,7 +192,8 @@ class _ReportPageState extends State<ReportPage> {
                           children: [
                             buildCard('Requested Fastag', requestfastag, 3),
                             SizedBox(width: 10),
-                            buildCard('Recharge/ Refill', refill, 4),
+                            buildCard('Rechargeissusance_report_counter_box',
+                                refill, 4),
                           ],
                         ),
                       ),

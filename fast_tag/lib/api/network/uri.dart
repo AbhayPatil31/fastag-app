@@ -1,7 +1,7 @@
 import '../../utility/apputility.dart';
 
 class URLS {
-  static String baseUrl = "https://staginglink.org/shourya-fastag/";
+  static String baseUrl = "https://shauryapay.com/";
   String agent_login_apiUrl = baseUrl + "agent_login_api";
   String profile_details_apiUrl = baseUrl + "profile_details_api";
   String stock_list_api_url = baseUrl + "stock_list_api";
@@ -51,9 +51,10 @@ class URLS {
   String set_withdra_request_url = baseUrl + "set_withdra_request";
   String get_withdra_request_url = baseUrl + "get_withdra_request";
   String get_total_withdra_amount_url = baseUrl + "get_total_withdra_amount";
-  String get_mapper_class_api_url = baseUrl + "get_mapper_class_api";//have to implement creatjson,networkcall,other is done
+  String get_mapper_class_api_url = baseUrl +
+      "get_mapper_class_api"; //have to implement creatjson,networkcall,other is done
   String get_vehicle_class_api_url = baseUrl + "get_vehicle_class_api";
-  String get_razor_pay_detailsurl = baseUrl+"get_razor_pay_details";
+  String get_razor_pay_detailsurl = baseUrl + "get_razor_pay_details";
   final int agent_login_api = 1;
   final int profile_details_api = 2;
   final int help_type_master_api = 3;

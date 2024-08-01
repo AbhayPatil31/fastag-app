@@ -16,7 +16,7 @@ String cancelpendingissuanceresponseToJson(
 class Cancelpendingissuanceresponse {
   String? status;
   String? message;
-  Data? data;
+  List<dynamic>? data;
 
   Cancelpendingissuanceresponse({
     this.status,
@@ -28,20 +28,14 @@ class Cancelpendingissuanceresponse {
       Cancelpendingissuanceresponse(
         status: json["status"],
         message: json["message"],
-        data: json["data"] == null ? null : Data.fromJson(json["data"]),
+        data: json["data"] == null
+            ? []
+            : List<dynamic>.from(json["data"]!.map((x) => x)),
       );
 
   Map<String, dynamic> toJson() => {
         "status": status,
         "message": message,
-        "data": data?.toJson(),
+        "data": data == null ? [] : List<dynamic>.from(data!.map((x) => x)),
       };
-}
-
-class Data {
-  Data();
-
-  factory Data.fromJson(Map<String, dynamic> json) => Data();
-
-  Map<String, dynamic> toJson() => {};
 }

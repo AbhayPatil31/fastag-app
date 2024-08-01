@@ -206,7 +206,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   ),
                   Flexible(
                     child: Text(
-                      'A 6 digit security code will be sent via SMS to verify your mobile number!',
+                      'A 4 digit security code will be sent via SMS to verify your mobile number!',
                       style:
                           TextStyle(fontSize: 10, fontWeight: FontWeight.w400),
                     ),

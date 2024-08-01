@@ -254,8 +254,14 @@ class ReplaceFastagPageState extends State<ReplaceFastagPage> {
           validatevehicle = true;
           setState(() {});
         },
+        textCapitalization: TextCapitalization.characters,
+        // inputFormatters: [
+        //   FilteringTextInputFormatter.allow(
+        //       RegExp(r'[A-Z]')), // Allow only uppercase letter
+        // ],
         decoration: InputDecoration(
           hintText: 'Enter Vehicle Number*',
+
           errorText: validatevehicle ? null : errorforvehiclenumber,
           errorStyle: TextStyle(color: Colors.red, fontSize: 10),
           border: OutlineInputBorder(), // Remove underline
@@ -552,9 +558,9 @@ class ReplaceFastagPageState extends State<ReplaceFastagPage> {
       errorforvehiclenumber = "Please enter valid vehicle number";
       setState(() {});
       return 'abc';
-    } else if (vehiclebarcodeselectedvalue == null && idselectedValue == null) {
+    } else if (vehiclebarcodeselectedvalue == null || idselectedValue == null) {
       validatebarcode = false;
-      validatereson = false;
+      // validatereson = false;
       setState(() {});
       // } else if ((_isValidFormat(_barcodenumbercontroller.text)) == false) {
       //   validatebarcode = false;

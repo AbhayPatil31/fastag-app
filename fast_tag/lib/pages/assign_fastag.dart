@@ -262,12 +262,11 @@ class AssignFastagPageState extends State<AssignFastagPage> {
     }
   }
 
-  String isValidVehicleNumberPlate(String NUMBERPLATE) {
-    if (hasMatch(NUMBERPLATE, r'^[A-Z]{2}[0-9]{2}[A-HJ-NP-Z]{1,2}[0-9]{4}$') ==
-        true) {
-      return "true";
-    } else if (hasMatch(NUMBERPLATE, r'[0-9]{2}BH[0-9]{4}[A-HJ-NP-Z]{1,2}$') ==
-        true) {
+  String isValidVehicleNumberPlate(String numberPlate) {
+    // Regular expression to check if the plate is entirely in uppercase
+    RegExp uppercaseRegExp = RegExp(r'^[A-Z0-9]*$');
+
+    if (uppercaseRegExp.hasMatch(numberPlate)) {
       return "true";
     } else {
       return "false";

@@ -29,18 +29,37 @@ class SignUpOtpPage extends StatefulWidget {
 
 class _SignUpOtpPageState extends State<SignUpOtpPage> {
   List<TextEditingController> _controllers =
-      List.generate(6, (index) => TextEditingController());
+      List.generate(4, (index) => TextEditingController());
+  List<FocusNode> _focusNodes = List.generate(4, (index) => FocusNode());
 
-  int secondsRemaining = 40;
+  int secondsRemaining = 60;
   bool enableResend = false;
-  List<FocusNode>? _focusNodes;
+
   Timer? timer;
+
   @override
   void initState() {
     super.initState();
-    _focusNodes = List.generate(6, (_) => FocusNode());
+    startResendOtpTimer();
+  }
+
+  @override
+  void dispose() {
+    timer?.cancel();
+    _controllers.forEach((controller) => controller.dispose());
+    _focusNodes.forEach((focusNode) => focusNode.dispose());
+    super.dispose();
+  }
+
+  /// Starts the resend OTP countdown timer
+  void startResendOtpTimer() {
+    setState(() {
+      secondsRemaining = 60;
+      enableResend = false;
+    });
+
     timer = Timer.periodic(Duration(seconds: 1), (_) {
-      if (secondsRemaining != 0) {
+      if (secondsRemaining > 0) {
         setState(() {
           secondsRemaining--;
         });
@@ -48,21 +67,16 @@ class _SignUpOtpPageState extends State<SignUpOtpPage> {
         setState(() {
           enableResend = true;
         });
+        timer?.cancel();
       }
     });
   }
 
-  @override
-  void dispose() {
-    timer!.cancel();
-    _focusNodes!.forEach((focusNode) => focusNode.dispose());
-    super.dispose();
-  }
-
+  /// Shows success dialog after OTP is verified successfully
   void _showSuccessDialog(BuildContext context) {
     showDialog(
       context: context,
-      barrierDismissible: false, // Prevent dismissing dialog by tapping outside
+      barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
           content: Container(
@@ -103,10 +117,6 @@ class _SignUpOtpPageState extends State<SignUpOtpPage> {
 
     // Delay redirecting to the home screen for 5 seconds
     Future.delayed(Duration(seconds: 3), () {
-      // Navigator.pushReplacement(
-      //   context,
-      //   MaterialPageRoute(builder: (context) => MyDashboard()),
-      // );
       Navigator.pushAndRemoveUntil(context, MaterialPageRoute(
         builder: (context) {
           return MyDashboard();
@@ -115,7 +125,7 @@ class _SignUpOtpPageState extends State<SignUpOtpPage> {
     });
   }
 
-  // Function to show error dialog
+  /// Shows an error dialog with a custom message
   void _showErrorDialog(BuildContext context, String message) {
     showDialog(
       context: context,
@@ -136,48 +146,61 @@ class _SignUpOtpPageState extends State<SignUpOtpPage> {
     );
   }
 
+  /// Builds the OTP input text field for a specific index
   Widget _buildTextField(int index) {
     return SizedBox(
       width: 50,
-      height: 45,
+      height: 50,
       child: TextField(
+        cursorColor: Color(0xFF08469D),
         controller: _controllers[index],
-        focusNode: _focusNodes![index],
+        focusNode: _focusNodes[index],
         keyboardType: TextInputType.number,
         maxLength: 1,
         textAlign: TextAlign.center,
         decoration: InputDecoration(
-          counterText: "",
-          border: OutlineInputBorder(),
+          counterText: "", // Hide the counter text
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: BorderSide(color: Colors.grey),
+          ),
+          filled: true,
+          fillColor: Colors.transparent,
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: BorderSide(color: Color(0xFF008357)),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: BorderSide(color: Colors.grey),
+          ),
         ),
         onChanged: (String value) {
-          if (value.length == 1 && index < 5) {
-            FocusScope.of(context).requestFocus(_focusNodes![index + 1]);
+          if (value.isNotEmpty && index < 3) {
+            // Move focus to the next field if a value is entered
+            FocusScope.of(context).requestFocus(_focusNodes[index + 1]);
           } else if (value.isEmpty && index > 0) {
-            FocusScope.of(context).requestFocus(_focusNodes![index - 1]);
+            // Move focus to the previous field if the value is deleted
+            FocusScope.of(context).requestFocus(_focusNodes[index - 1]);
+          }
+          // Check if all fields are filled to dismiss keyboard
+          if (_controllers.every((controller) => controller.text.isNotEmpty)) {
+            FocusScope.of(context).unfocus(); // Dismiss the keyboard
           }
         },
         onSubmitted: (_) {
           if (_controllers[index].text.isEmpty && index > 0) {
-            FocusScope.of(context).requestFocus(_focusNodes![index - 1]);
+            FocusScope.of(context).requestFocus(_focusNodes[index - 1]);
           }
         },
         onEditingComplete: () {
           if (_controllers[index].text.isEmpty && index > 0) {
-            FocusScope.of(context).requestFocus(_focusNodes![index - 1]);
+            FocusScope.of(context).requestFocus(_focusNodes[index - 1]);
           }
         },
         inputFormatters: [
           LengthLimitingTextInputFormatter(1),
           FilteringTextInputFormatter.digitsOnly,
-          TextInputFormatter.withFunction((oldValue, newValue) {
-            if (newValue.text.isEmpty) {
-              if (index > 0) {
-                FocusScope.of(context).requestFocus(_focusNodes![index - 1]);
-              }
-            }
-            return newValue;
-          }),
         ],
       ),
     );
@@ -203,12 +226,6 @@ class _SignUpOtpPageState extends State<SignUpOtpPage> {
                   ),
                 ),
                 SizedBox(height: 5),
-                // Text(
-                //   'Please enter the 6 digit security code we just sent you at 222-444-XXXX',
-                //   style: TextStyle(
-                //     fontSize: 18,
-                //   ),
-                // ),
                 Container(
                   width: MediaQuery.of(context).size.width * 0.8,
                   child: RichText(
@@ -245,121 +262,68 @@ class _SignUpOtpPageState extends State<SignUpOtpPage> {
                 SizedBox(
                   height: 20,
                 ),
-                enableResend
-                    ? SizedBox(
-                        height: 60,
-                        width: double.infinity,
-                        child: ElevatedButton(
-                          onPressed: () {},
-                          style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all<Color>(
-                              Colors
-                                  .transparent, // Set background to transparent to show gradient
-                            ),
-                            shadowColor: MaterialStateProperty.all<Color>(
-                              Colors.transparent, // No shadow color
-                            ),
-                            shape: MaterialStateProperty.all<
-                                RoundedRectangleBorder>(
-                              RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(5.0),
-                              ),
-                            ),
-                            padding:
-                                MaterialStateProperty.all<EdgeInsetsGeometry>(
-                                    EdgeInsets.zero), // Remove padding
-                          ),
-                          child: Container(
-                            height: 60,
-                            decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                colors: [
-                                  Color(0xFF08469D),
-                                  Color(0xFF0056D0),
-                                  Color(0xFF0C92DD),
-                                ],
-                                begin: Alignment.centerLeft,
-                                end: Alignment.centerRight,
-                              ),
-                              borderRadius: BorderRadius.circular(5.0),
-                            ),
-                            width: double.infinity,
-                            child: Center(
-                              child: Text(
-                                'Verify',
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 16.0,
-                                    fontWeight: FontWeight.w500),
-                              ),
-                            ),
-                          ),
-                        ),
-                      )
-                    : SizedBox(
-                        height: 60,
-                        width: double.infinity,
-                        child: ElevatedButton(
-                          onPressed: () {
-                            if (_controllers.isEmpty) {
-                              SnackBarDesign(
-                                  "Please enter OTP",
-                                  context,
-                                  colorfile().errormessagebcColor,
-                                  colorfile().errormessagetxColor);
-                            } else {
-                              Networkcallforverifyotp();
-                            }
-                          },
-                          style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all<Color>(
-                              Colors
-                                  .transparent, // Set background to transparent to show gradient
-                            ),
-                            shadowColor: MaterialStateProperty.all<Color>(
-                              Colors.transparent, // No shadow color
-                            ),
-                            shape: MaterialStateProperty.all<
-                                RoundedRectangleBorder>(
-                              RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(5.0),
-                              ),
-                            ),
-                            padding:
-                                MaterialStateProperty.all<EdgeInsetsGeometry>(
-                                    EdgeInsets.zero), // Remove padding
-                          ),
-                          child: Container(
-                            height: 60,
-                            decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                colors: [
-                                  Color(0xFF08469D),
-                                  Color(0xFF0056D0),
-                                  Color(0xFF0C92DD),
-                                ],
-                                begin: Alignment.centerLeft,
-                                end: Alignment.centerRight,
-                              ),
-                              borderRadius: BorderRadius.circular(5.0),
-                            ),
-                            width: double.infinity,
-                            child: Center(
-                              child: Text(
-                                'Verify',
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 16.0,
-                                    fontWeight: FontWeight.w500),
-                              ),
-                            ),
-                          ),
+                SizedBox(
+                  height: 60,
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      if (_controllers
+                          .every((controller) => controller.text.isNotEmpty)) {
+                        Networkcallforverifyotp();
+                      } else {
+                        SnackBarDesign(
+                            "Please enter complete OTP",
+                            context,
+                            colorfile().errormessagebcColor,
+                            colorfile().errormessagetxColor);
+                      }
+                    },
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all<Color>(
+                        Colors
+                            .transparent, // Set background to transparent to show gradient
+                      ),
+                      shadowColor: MaterialStateProperty.all<Color>(
+                        Colors.transparent, // No shadow color
+                      ),
+                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5.0),
                         ),
                       ),
+                      padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+                          EdgeInsets.zero), // Remove padding
+                    ),
+                    child: Container(
+                      height: 60,
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [
+                            Color(0xFF08469D),
+                            Color(0xFF0056D0),
+                            Color(0xFF0C92DD),
+                          ],
+                          begin: Alignment.centerLeft,
+                          end: Alignment.centerRight,
+                        ),
+                        borderRadius: BorderRadius.circular(5.0),
+                      ),
+                      width: double.infinity,
+                      child: Center(
+                        child: Text(
+                          'Verify',
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16.0,
+                              fontWeight: FontWeight.w500),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
                 SizedBox(height: 10),
                 Center(
                   child: Text(
-                    // 'Resend in $_resendTimer Sec',
                     'Resend in $secondsRemaining Sec',
                     style: TextStyle(
                         color: Color(0xff0056D0),
@@ -367,36 +331,40 @@ class _SignUpOtpPageState extends State<SignUpOtpPage> {
                         fontWeight: FontWeight.w400),
                   ),
                 ),
-
                 SizedBox(height: 20),
+                if (enableResend)
+                  Center(
+                    child: TextButton(
+                      onPressed: () {
+                        Networkcallforresendotp();
+                      },
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            "Didn’t receive the code? ",
+                            style: TextStyle(
+                                color: Color(0xff717784),
+                                fontSize: 12,
+                                fontWeight: FontWeight.w400),
+                          ),
+                          Text(
+                            "Resend OTP",
+                            style: TextStyle(
+                              color: Color(0xff0056D0),
+                              fontSize: 12.0,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
               ],
             ),
           ),
         ],
       ),
-      bottomNavigationBar: BottomAppBar(
-          color: Theme.of(context).scaffoldBackgroundColor,
-          child: Container(
-              alignment: Alignment.center,
-              child: RichText(
-                  text: TextSpan(
-                      text: 'Didn’t receive the code? ',
-                      style: TextStyle(
-                          color: Color(0xff717784),
-                          fontSize: 12,
-                          fontWeight: FontWeight.w400),
-                      children: <TextSpan>[
-                    TextSpan(
-                        text: "Resend ",
-                        style: TextStyle(
-                            color: Color(0xff0056D0),
-                            fontSize: 12.0,
-                            fontWeight: FontWeight.w400),
-                        recognizer: TapGestureRecognizer()
-                          ..onTap = () {
-                            Networkcallforresendotp();
-                          })
-                  ])))),
     );
   }
 
@@ -421,11 +389,6 @@ class _SignUpOtpPageState extends State<SignUpOtpPage> {
         String status = response[0].status!;
         switch (status) {
           case "true":
-            // SnackBarDesign(
-            //     "OTP verify successfully!!",
-            //     context,
-            //     colorfile().sucessmessagebcColor,
-            //     colorfile().sucessmessagetxColor);
             savevaluetosharedpref(widget.mobilenumber, response[0].data![0].id!,
                 response[0].data![0].firstName!);
             break;
@@ -476,9 +439,12 @@ class _SignUpOtpPageState extends State<SignUpOtpPage> {
   Future<void> Networkcallforresendotp() async {
     try {
       setState(() {
-        secondsRemaining = 40;
-        enableResend = false;
+        _controllers
+            .forEach((controller) => controller.clear()); // Clear OTP fields
+        FocusScope.of(context).unfocus(); // Dismiss keyboard
+        startResendOtpTimer(); // Restart timer
       });
+
       ProgressDialog.showProgressDialog(context, "");
       String profileString = createjson()
           .createJsonForLogin(widget.mobilenumber, widget.pushtoken);

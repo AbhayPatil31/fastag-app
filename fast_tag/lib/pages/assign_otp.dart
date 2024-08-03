@@ -29,14 +29,33 @@ class _AssignOtpPageState extends State<AssignOtpPage> {
       List.generate(6, (index) => TextEditingController());
   final List<FocusNode> _focusNodes = List.generate(6, (index) => FocusNode());
 
-  int secondsRemaining = 40;
+  int secondsRemaining = 60;
   bool enableResend = false;
   Timer? timer;
+
   @override
   void initState() {
     super.initState();
+    startResendOtpTimer();
+  }
+
+  @override
+  void dispose() {
+    timer?.cancel();
+    _focusNodes.forEach((focusNode) => focusNode.dispose());
+    _controllers.forEach((controller) => controller.dispose());
+    super.dispose();
+  }
+
+  /// Starts the resend OTP countdown timer
+  void startResendOtpTimer() {
+    setState(() {
+      secondsRemaining = 60;
+      enableResend = false;
+    });
+
     timer = Timer.periodic(Duration(seconds: 1), (_) {
-      if (secondsRemaining != 0) {
+      if (secondsRemaining > 0) {
         setState(() {
           secondsRemaining--;
         });
@@ -44,26 +63,61 @@ class _AssignOtpPageState extends State<AssignOtpPage> {
         setState(() {
           enableResend = true;
         });
+        timer?.cancel();
       }
     });
   }
 
-  @override
-  void dispose() {
-    timer!.cancel();
-    _focusNodes.forEach((focusNode) => focusNode.dispose());
-
-    super.dispose();
+  /// Checks if all OTP fields are filled
+  bool isOtpComplete() {
+    return _controllers.every((controller) => controller.text.isNotEmpty);
   }
 
+  /// Handles the input change for the OTP fields
+  void _handleOtpInputChange(String value, int index) {
+    if (value.length == 1) {
+      if (index < 5) {
+        _focusNodes[index].unfocus();
+        FocusScope.of(context).requestFocus(_focusNodes[index + 1]);
+      }
+    } else if (value.isEmpty) {
+      if (index > 0) {
+        _focusNodes[index].unfocus();
+        FocusScope.of(context).requestFocus(_focusNodes[index - 1]);
+      }
+    }
+
+    if (isOtpComplete()) {
+      FocusScope.of(context).unfocus(); // Dismiss the keyboard
+      // _verifyOtp(); // Automatically verify OTP when complete
+    }
+  }
+
+  /// Verifies the OTP
+  void _verifyOtp() {
+    if (isOtpComplete()) {
+      String otp = _controllers.map((c) => c.text).join();
+      print('OTP entered: $otp');
+      // Call your verification function here
+      Networkcallforverifyotp();
+    } else {
+      SnackBarDesign("Please enter complete OTP", context,
+          colorfile().errormessagebcColor, colorfile().errormessagetxColor);
+    }
+  }
+
+  /// Builds the OTP input text field for a specific index
   Widget _buildTextField(int index) {
     return SizedBox(
       width: 50,
       height: 45,
       child: TextField(
+        cursorColor: Colors.blue,
         controller: _controllers[index],
         focusNode: _focusNodes[index],
         keyboardType: TextInputType.number,
+        textInputAction:
+            index < 5 ? TextInputAction.next : TextInputAction.done,
         maxLength: 1,
         textAlign: TextAlign.center,
         decoration: InputDecoration(
@@ -73,24 +127,10 @@ class _AssignOtpPageState extends State<AssignOtpPage> {
           counterText: "",
           border: OutlineInputBorder(),
         ),
-        onChanged: (String value) {
-          if (value.length == 1) {
-            if (index < 5) {
-              _focusNodes[index].unfocus();
-              FocusScope.of(context).requestFocus(_focusNodes[index + 1]);
-            }
-          } else if (value.isEmpty) {
-            if (index > 0) {
-              _focusNodes[index].unfocus();
-              FocusScope.of(context).requestFocus(_focusNodes[index - 1]);
-            }
-          }
-        },
-        onSubmitted: (String value) {
-          if (value.length == 1 && index < 5) {
-            FocusScope.of(context).requestFocus(_focusNodes[index + 1]);
-          } else if (value.isEmpty && index > 0) {
-            FocusScope.of(context).requestFocus(_focusNodes[index - 1]);
+        onChanged: (value) => _handleOtpInputChange(value, index),
+        onSubmitted: (value) {
+          if (index == 5 && isOtpComplete()) {
+            // _verifyOtp();
           }
         },
       ),
@@ -103,7 +143,6 @@ class _AssignOtpPageState extends State<AssignOtpPage> {
       extendBody: true,
       extendBodyBehindAppBar: true,
       appBar: AppBar(
-        // forceMaterialTransparency: true,
         title: Text('OTP Verification',
             style: GoogleFonts.inter(
               fontWeight: FontWeight.w600,
@@ -177,7 +216,7 @@ class _AssignOtpPageState extends State<AssignOtpPage> {
                           height: 60,
                           width: double.infinity,
                           child: ElevatedButton(
-                            onPressed: () {},
+                            onPressed: _verifyOtp,
                             style: ButtonStyle(
                               backgroundColor: MaterialStateProperty.all<Color>(
                                 Color(0xFF0056D0).withOpacity(0.4),
@@ -221,17 +260,7 @@ class _AssignOtpPageState extends State<AssignOtpPage> {
                               borderRadius: BorderRadius.circular(5.0),
                             ),
                             child: ElevatedButton(
-                              onPressed: () {
-                                if (_controllers.isEmpty) {
-                                  SnackBarDesign(
-                                      "Please enter OTP",
-                                      context,
-                                      colorfile().errormessagebcColor,
-                                      colorfile().errormessagetxColor);
-                                } else {
-                                  Networkcallforverifyotp();
-                                }
-                              },
+                              onPressed: _verifyOtp,
                               style: ButtonStyle(
                                 backgroundColor:
                                     MaterialStateProperty.all<Color>(
@@ -264,7 +293,6 @@ class _AssignOtpPageState extends State<AssignOtpPage> {
                   SizedBox(height: 10),
                   Center(
                     child: Text(
-                      // 'Resend in $_resendTimer Sec',
                       'Resend in $secondsRemaining Sec',
                       style: TextStyle(
                         color: Colors.blue,
@@ -299,6 +327,8 @@ class _AssignOtpPageState extends State<AssignOtpPage> {
                         ),
                         recognizer: TapGestureRecognizer()
                           ..onTap = () {
+                            startResendOtpTimer();
+
                             Networkcallforresendotp();
                           })
                   ])))),
@@ -307,7 +337,7 @@ class _AssignOtpPageState extends State<AssignOtpPage> {
 
   Future<void> Networkcallforverifyotp() async {
     try {
-      ProgressDialog.showProgressDialog(context, " title");
+      ProgressDialog.showProgressDialog(context, "title");
       String abc = "";
       for (var element in _controllers) {
         abc = abc + element.text;
@@ -386,7 +416,7 @@ class _AssignOtpPageState extends State<AssignOtpPage> {
     try {
       ProgressDialog.showProgressDialog(context, "title");
       setState(() {
-        secondsRemaining = 40;
+        secondsRemaining = 60;
         enableResend = false;
       });
       String assignfaasttag = createjson().createjsonforassignfasttag(

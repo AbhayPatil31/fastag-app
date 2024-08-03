@@ -554,64 +554,115 @@ class ReplaceFastagPageState extends State<ReplaceFastagPage> {
       errorforbarcode = "Please select barcode number",
       errorforreson = "Please select reason for fastag replace";
 
-  validatefields() {
+  void validatefields() {
+    // Reset all validation flags
     validatecustomername = true;
     validatevehicle = true;
     validatebarcode = true;
     validatereson = true;
-    if (_customernamecontroller.text.isEmpty &&
-            _vehiclenumbercontroller.text.isEmpty &&
-            vehiclebarcodeselectedvalue == null ||
+
+    // Reset error messages
+    errorforcutomername = "";
+    errorforvehiclenumber = "";
+    errorforbarcode = "";
+    errorforreson = "";
+
+    // Check if any required field is empty
+    if (_customernamecontroller.text.isEmpty ||
+        _vehiclenumbercontroller.text.isEmpty ||
+        vehiclebarcodeselectedvalue == null ||
         idselectedValue == null) {
+      if (_customernamecontroller.text.isEmpty) {
+        validatecustomername = false;
+        errorforcutomername = "Please enter valid 10 digit mobile number";
+      }
+      if (_vehiclenumbercontroller.text.isEmpty) {
+        validatevehicle = false;
+        errorforvehiclenumber = "Please enter vehicle number";
+      }
+      if (vehiclebarcodeselectedvalue == null) {
+        validatebarcode = false;
+        errorforbarcode = "Please select barcode";
+      }
+      if (idselectedValue == null) {
+        validatereson = false;
+        errorforreson = "Please select a reason";
+      }
+      setState(() {});
+      return;
+    }
+
+    // Validate vehicle number and customer name
+    if (isValidVehicleNumberPlate(_vehiclenumbercontroller.text) == "false") {
+      validatevehicle = false;
+      errorforvehiclenumber = "Please enter a valid vehicle number";
+    }
+
+    if (isValidMobileNumber(_customernamecontroller.text) == "false") {
       validatecustomername = false;
-      validatevehicle = false;
+      errorforcutomername = "Please enter a valid mobile number";
+    }
+
+    // Validate barcode selection
+    if (vehiclebarcodeselectedvalue == null) {
       validatebarcode = false;
+      errorforbarcode = "Please select a barcode";
+    }
+
+    // Validate reason
+    if (idselectedValue == null) {
       validatereson = false;
-      setState(() {});
-    } else if (_vehiclenumbercontroller.text.isEmpty &&
-        vehiclebarcodeselectedvalue == null &&
-        idselectedValue == null) {
-      validatevehicle = false;
-      validatebarcode = false;
-      validatereson = false;
-      setState(() {});
-    } else if (isValidVehicleNumberPlate(_vehiclenumbercontroller.text) ==
-        "false") {
-      validatevehicle = false;
-      errorforvehiclenumber = "Please enter valid vehicle number";
-      setState(() {});
-      return 'abc';
-    } else if (vehiclebarcodeselectedvalue == null || idselectedValue == null) {
-      validatebarcode = false;
-      // validatereson = false;
-      setState(() {});
-      // } else if ((_isValidFormat(_barcodenumbercontroller.text)) == false) {
-      //   validatebarcode = false;
-      //   errorforbarcode =
-      //       "Invalid format, please enter in 123456-123-1234567 format";
-      //   setState(() {});
-    } else if (idselectedValue == null) {
-      validatereson = false;
-      setState(() {});
-    } else {
+      errorforreson = "Please select a reason";
+    }
+
+    // Update the state to reflect validation changes
+    setState(() {});
+
+    // If all fields are valid, proceed with network call
+    if (validatecustomername &&
+        validatevehicle &&
+        validatebarcode &&
+        validatereson) {
       Networkcallforreplacetaggenerateotp();
     }
   }
 
-  String isValidVehicleNumberPlate(String NUMBERPLATE) {
-    if (hasMatch(NUMBERPLATE, r'^[A-Z]{2}[0-9]{2}[A-HJ-NP-Z]{1,2}[0-9]{4}$') ==
-        true) {
-      return "true";
-    } else if (hasMatch(NUMBERPLATE, r'[0-9]{2}BH[0-9]{4}[A-HJ-NP-Z]{1,2}$') ==
-        true) {
+  String isValidVehicleNumberPlate(String numberPlate) {
+    // Regular expression to check if the plate is entirely in uppercase
+    RegExp uppercaseRegExp = RegExp(r'^[A-Z0-9]*$');
+
+    if (uppercaseRegExp.hasMatch(numberPlate)) {
       return "true";
     } else {
       return "false";
     }
   }
 
+  // String isValidVehicleNumberPlate(String NUMBERPLATE) {
+  //   if (hasMatch(NUMBERPLATE, r'^[A-Z]{2}[0-9]{2}[A-HJ-NP-Z]{1,2}[0-9]{4}$') ==
+  //       true) {
+  //     return "true";
+  //   } else if (hasMatch(NUMBERPLATE, r'[0-9]{2}BH[0-9]{4}[A-HJ-NP-Z]{1,2}$') ==
+  //       true) {
+  //     return "true";
+  //   } else {
+  //     return "false";
+  //   }
+  // }
+
   static bool hasMatch(String? value, String pattern) {
     return (value == null) ? false : RegExp(pattern).hasMatch(value);
+  }
+
+  String isValidMobileNumber(String mobileNumber) {
+    // Regular expression for a 10-digit mobile number
+    RegExp regExp = RegExp(r'^\d{10}$');
+
+    if (regExp.hasMatch(mobileNumber)) {
+      return "true";
+    } else {
+      return "false";
+    }
   }
 
   bool _isValidFormat(String input) {

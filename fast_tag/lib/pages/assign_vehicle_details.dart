@@ -537,7 +537,7 @@ class AssignVehicleDetailsState extends State<AssignVehicleDetails> {
                   SizedBox(
                     height: 5,
                   ),
-                  vehiclebarcode(),
+                  barcodelist.isNotEmpty ? vehiclebarcode() : Container(),
                   SizedBox(
                     height: 5,
                   ),

@@ -32,29 +32,34 @@ class _ReportPageState extends State<ReportPage> {
   Future<void> Networkcallforcount(bool showprogress) async {
     try {
       if (showprogress) {
-        ProgressDialog.showProgressDialog(context, " title");
+        ProgressDialog.showProgressDialog(context, "title");
       }
+
       String createjsonforstocklist =
           createjson().createjsonforstocklist(AppUtility.AgentId, context);
+
       List<Object?>? list = await NetworkCall().postMethod(
           URLS().issusance_report_counter_box,
           URLS().issusance_report_counter_box_url,
           createjsonforstocklist,
           context);
+
       if (list != null) {
         if (showprogress) {
           Navigator.pop(context);
         }
-        List<Issusancereportcounterboxresponse> response = List.from(list!);
+
+        List<Issusancereportcounterboxresponse> response = List.from(list);
         String status = response[0].status!;
+
         switch (status) {
           case "true":
             countlist = response[0].data!;
             if (countlist != null) {
-              assignfastag = int.parse(countlist!.assignFastag!);
-              approvedfastag = int.parse(countlist!.approvedFastag!);
-              requestfastag = int.parse(countlist!.requestedFastag!)!;
-              refill = int.parse(countlist!.recharge!);
+              assignfastag = _parseInt(countlist!.assignFastag);
+              approvedfastag = _parseInt(countlist!.approvedFastag);
+              requestfastag = _parseInt(countlist!.requestedFastag ?? "0");
+              refill = _parseInt(countlist!.recharge);
             }
             setState(() {});
             break;
@@ -74,6 +79,15 @@ class _ReportPageState extends State<ReportPage> {
       }
     } catch (e) {
       print(e.toString());
+    }
+  }
+
+  int _parseInt(String? value) {
+    try {
+      return int.parse(value ?? "0");
+    } catch (e) {
+      print("Error parsing int: ${e.toString()}");
+      return 0; // or any default value you'd prefer
     }
   }
 

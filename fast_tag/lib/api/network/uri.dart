@@ -1,7 +1,7 @@
 import '../../utility/apputility.dart';
 
 class URLS {
-  static String baseUrl = "https://shauryapay.com/";
+  static String baseUrl = "https://staginglink.org/shourya-fastag/";
   String agent_login_apiUrl = baseUrl + "agent_login_api";
   String profile_details_apiUrl = baseUrl + "profile_details_api";
   String stock_list_api_url = baseUrl + "stock_list_api";

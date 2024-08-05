@@ -65,7 +65,7 @@ android {
     buildTypes {
         release {
             // Sign with the release key
-            signingConfig signingConfigs.release//uncomment if you want to give .apk 
+            // signingConfig signingConfigs.release//uncomment if you want to give .apk 
             minifyEnabled false
             shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
